@@ -1,0 +1,42 @@
+{
+  "name": "functional-programming",
+  "version": "2.0.0",
+  "description": "functional-programming",
+  "files": [],
+  "scripts": {
+    "lint": "tslint -p .",
+    "build": "tsc -p ./tsconfig.json",
+    "doctoc": "doctoc README.md",
+    "shapes": "npx parcel src/shapes.html",
+    "functor": "npx parcel src/functor.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gcanti/functional-programming.git"
+  },
+  "author": "Giulio Canti <giulio.canti@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gcanti/functional-programming/issues"
+  },
+  "homepage": "https://github.com/gcanti/functional-programming",
+  "dependencies": {
+    "@types/react": "^17.0.3",
+    "fast-check": "^2.12.1",
+    "fp-ts": "^2.10.4",
+    "react": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.6.8",
+    "doctoc": "^1.4.0",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.2.1",
+    "tslint": "^5.11.0",
+    "tslint-config-standard": "^8.0.1",
+    "tslint-etc": "^1.13.9",
+    "tslint-immutable": "^6.0.1",
+    "typescript": "^4.2.4"
+  },
+  "tags": [],
+  "keywords": []
+}
