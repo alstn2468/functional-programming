@@ -1,10 +1,10 @@
-This repo introduces functional programming concepts using TypeScript and possibly libraries in the fp-ts ecosystem.
+이 저장소는 TypeScript를 사용하는 함수형 프로그래밍 개념과 fp-ts 생태계의 라이브러리를 소개합니다.
 
-This fork is an edited translation of [Giulio Canti](https://gcanti.github.io/about.html)'s ["Introduction to Functional Programming (Italian)"](https://github.com/gcanti/functional-programming). The author uses the original as a reference and supporting material for his lectures and workshops on functional programming.
+이 사본은 [Giulio Canti](https://gcanti.github.io/about.html)의 ["Introduction to Functional Programming (Italian)"](https://github.com/gcanti/functional-programming)의 번역본입니다. 저자는 함수형 프로그래밍에 대한 강의와 워크숍을 위해 원본을 참고 자료로 사용합니다.
 
-The purpose of the edits is to expand on the material without changing the concepts nor structure, for more information about the edit's goals see the [CONTRIBUTING](/CONTRIBUTING.md) file.
+사본의 목적은 개념이나 구조를 변경하지 않고 자료를 확장하는 것입니다. 목표에 대한 자세한 내용은 [CONTRIBUTING](/CONTRIBUTING.md) 파일을 참조하십시오.
 
-**Setup**
+**설정하기**
 
 ```sh
 git clone https://github.com/gcanti/functional-programming.git
@@ -12,21 +12,21 @@ cd functional-programming
 npm i
 ```
 
-# What is functional programming
+# 함수형 프로그래밍이란
 
-> Functional Programming is programming with pure functions. Mathematical functions.
+> 함수형 프로그래밍은 순수 함수(수학 함수)를 이용해 프로그래밍하는 것입니다.
 
-A quick search on the internet may lead you to the following definition:
+인터넷에서 검색하면 다음 정의를 찾을 수 있습니다.
 
-> A (pure) function is a procedure that given the same input always return the same output without any observable side-effect.
+> (순수) 함수는 같은 입력이 주어지면 부작용 없이 항상 같은 출력을 반환하는 프로시저입니다.
 
-The term "side effect" does not yet have any specific meaning (we'll see in the future how to give a formal definition), what matters is to have some sort of intuition, think about opening a file or writing into a database.
+"부작용"이라는 단어는 아직 구체적인 의미가 없습니다(앞으로 공식적인 정의를 제공하는 방법을 살펴보겠습니다). 중요한 것은 일종의 직관을 갖고 파일을 열거나 데이터베이스에 쓰는 것에 대해 생각하는 것입니다.
 
-For the time being we can limit ourselves to say that a side effect is _anything_ a function does besides returning a value.
+당분간 우리는 부작용이 값을 반환하는 것 외에 함수가 하는 _모든 것_이라고 스스로 제한할 수 있습니다.
 
-What is the structure of a program that uses exclusively pure functions?
+순수 함수만 사용하는 프로그램의 구조는 무엇일까요?
 
-A functional program tends to be written like a **pipeline**:
+함수형 프로그램은 **파이프라인**처럼 작성되는 경향이 있습니다.
 
 ```ts
 const program = pipe(
@@ -38,77 +38,77 @@ const program = pipe(
 )
 ```
 
-What happens here is that `input` is passed to the first function `f1`, which returns a value that is passed to the second function `f2`, which returns a value that is passed as an argument to the third function `f3`, and so on.
+여기서 일어나는 일은 `input`이 첫 번째 함수 `f1`에 전달되고 두 번째 함수 `f2`에 전달되는 값을 반환하고, 두 번째 함수에서 세 번째 함수 `f3`에 인자로 전달되는 값을 반환하는 것 등이 있습니다.
 
-**Demo**
+**시연**
 
 [`00_pipe_and_flow.ts`](src/00_pipe_and_flow.ts)
 
-We'll see how functional programming provides us with tools to structure our code in that style.
+함수형 프로그래밍이 해당 스타일로 코드를 구조화하는 도구를 제공하는 방법을 살펴보겠습니다.
 
-Other than understanding what functional programming _is_, it is also essential to understand what is it's goal.
+함수형 프로그래밍이 _무엇_인지 이해하는 것 외에도 함수형 프로그래밍의 목적을 이해하는 것도 중요합니다.
 
-Functional programming's goal is to **tame a system's complexity** through the use of formal _models_, and to give careful attention to **code's properties** and refactoring ease.
+함수형 프로그래밍의 목표는 형식적인 _모델_을 사용해 **시스템의 복잡성을 줄이고** **코드의 속성**과 리팩토링을 용이하게 하는 것에 중점을 두는 것입니다.
 
-> Functional programming will help teach people the mathematics behind program construction:
+> 함수형 프로그래밍은 사람들에게 프로그램 구성 뒤에 있는 수학을 가르치는 데 도움이 될 것입니다.
 >
-> - how to write composable code
-> - how to reason about side effects
-> - how to write consistent, general, less ad-hoc APIs
+> - 조합 가능한 코드를 작성하는 방법
+> - 부작용에 대해 추론하는 방법
+> - 일관되고 일반적이며 덜 임시적인 API를 작성하는 방법
 
-What does it mean to give careful attention to code's properties? Let's see with an example:
+코드의 속성에 중점을 둔다는 것은 무엇을 의미할까요? 예시를 들어 보겠습니다.
 
-**Example**
+**예시**
 
-Why can we say that the `Array`'s `map` method is "more functional" than a `for` loop?
+`Array`의 `map` 메소드가 `for` 루프보다 "더 함수적"이라고 말할 수 있는 이유는 무엇일까요?
 
 ```ts
-// input
+// 입력
 const xs: Array<number> = [1, 2, 3]
 
-// transformation
+// 변환
 const double = (n: number): number => n * 2
 
-// result: I want an array where each `xs`' element is doubled
+// 결과: `xs`의 각 요소가 2배가 되는 배열을 원합니다.
 const ys: Array<number> = []
 for (let i = 0; i <= xs.length; i++) {
   ys.push(double(xs[i]))
 }
 ```
 
-A `for` loop offers a lot of flexibility, I can modify:
+`for` 루프는 많은 유연성을 제공하며, 아래와 같이 수정할 수 있습니다.
 
-- the starting index, `let i = 0`
-- the looping condition, `i < xs.length`
-- the step change, `i++`.
+- 시작 인덱스 `let i = 0`
+- 반복 조건, `i < xs.length`
+- 단계별 변경, `i++`.
 
-This also implies that I may introduce **errors** and that I have no guarantees about the returned value.
+이것은 또한 **오류**가 발생할 수 있으며 반환값을 보장할 수 없음을 의미합니다.
 
-**Quiz**. Is the `for loop` correct?
+**퀴즈**. `for 루프`가 올바르게 작성되었나요?
 
-> See the [answer here](src/quiz-answers/for-loop.md)
+> [정답은 여기](src/quiz-answers/for-loop.md)에서 확인할 수 있습니다.
 
-Let's rewrite the same exercise using `map`.
+`map`을 사용하여 같은 예시를 다시 작성해 봅시다.
 
 ```ts
-// input
+// 입력
 const xs: Array<number> = [1, 2, 3]
 
-// transformation
+// 변환
 const double = (n: number): number => n * 2
 
-// result: I want an array where each `xs`' element is doubled
+// 결과: `xs`의 각 요소가 2배가 되는 배열을 원합니다.
 const ys: Array<number> = xs.map(double)
 ```
 
-We can note how `map` lacks the same flexibility of a `for loop`, but it offers us some guarantees:
+`map`이 `for 루프`와 같은 유연성이 부족하다는 것을 알 수 있지만 몇 가지를 보장합니다.
 
-- all the elements of the input array will be processed
-- the resulting array will always have the same number of elements as the starting one
+- 입력 배열의 모든 요소가 처리됩니다.
+- 결과 배열은 항상 시작 배열과 동일한 수의 요소를 갖습니다.
 
-In functional programming, where there's an emphasis on code properties rather than implementation details, the `map` operation is interesting **due to its limitations**
+세부 구현보다 코드 속성에 중점을 두는 함수형 프로그래밍에서 `map` 연산은 **제한으로 인해** 흥미롭습니다.
 
-Think about how easier it is to review a PR that involves `map` rather than a `for` loop.
+`for` 루프보다 `map`이 포함된 Pull Request를 검토하는 것이 얼마나 쉬울지 생각해 보세요.
 
 # The two pillars of functional programming
 
@@ -249,11 +249,11 @@ Thus the usual design you can find in a functional module is:
 
 Let's try to implement such a module:
 
-**Demo**
+**시연**
 
 [`01_retry.ts`](src/01_retry.ts)
 
-As you can see from the previous demo, with merely 3 primitives and two combinators we've been able to express a pretty complex policy.
+As you can see from the previous 시연, with merely 3 primitives and two combinators we've been able to express a pretty complex policy.
 
 Think at how just adding a single new primitive, or a single combinator to those already defined, adds expressive possibilities exponentially.
 
@@ -445,9 +445,9 @@ const SemigroupSum: Semigroup<number> = {
 }
 ```
 
-**Quiz**. Can the `concat` combinator defined in the demo [`01_retry.ts`](src/01_retry.ts) be used to define a `Semigroup` instance for the `RetryPolicy` type?
+**Quiz**. Can the `concat` combinator defined in the 시연 [`01_retry.ts`](src/01_retry.ts) be used to define a `Semigroup` instance for the `RetryPolicy` type?
 
-> See the [answer here](src/quiz-answers/semigroup-demo-concat.md)
+> See the [answer here](src/quiz-answers/semigroup-시연-concat.md)
 
 This is the implementation for the semigroup `(number, *)` where `*` is the usual number multiplication:
 
@@ -1422,7 +1422,7 @@ console.log(
 
 **Quiz**. Given a type `A` is it possible to define a `Semigroup<Ord<A>>` instance? What could it possibly represent?
 
-**Demo**
+**시연**
 
 # Modeling composition through Monoids
 
@@ -1631,7 +1631,7 @@ const Monoid: Monoid<Point> = tuple(N.MonoidSum, N.MonoidSum)
 
 **Quiz**. Is it possible to define a "free monoid" for a generic type `A`?
 
-**Demo** (implementing a system to draw geoetric shapes on canvas)
+**시연** (implementing a system to draw geoetric shapes on canvas)
 
 [`03_shapes.ts`](src/03_shapes.ts)
 
@@ -3448,7 +3448,7 @@ export const program = (ns: ReadonlyArray<number>): Option<string> =>
 
 Practically, using `Option`, we're always in front of the `happy path`, error handing happens behind the scenes thanks to `map`.
 
-**Demo** (optional)
+**시연** (optional)
 
 [`04_functor.ts`](src/04_functor.ts)
 
@@ -4033,7 +4033,7 @@ import { Reader } from 'fp-ts/Reader'
 const of = <R, A>(a: A): Reader<R, A> => () => a
 ```
 
-**Demo**
+**시연**
 
 [`05_applicative.ts`](src/05_applicative.ts)
 
@@ -4902,6 +4902,6 @@ const DepsAsync: Deps = {
 program5(DepsAsync)().then(console.log)
 ```
 
-**Demo**
+**시연**
 
 [`06_game.ts`](src/06_game.ts)

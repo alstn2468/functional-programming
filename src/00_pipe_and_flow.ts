@@ -7,7 +7,7 @@ const increment = (n: number): number => n + 1
 const decrement = (n: number): number => n - 1
 
 /*
-    pipe operator:
+    pipe 연산자:
 
     def program1 (n) do
       n
@@ -16,7 +16,7 @@ const decrement = (n: number): number => n - 1
         |> decrement
     end
 
-    method chaining:
+    메서드 체이닝:
 
     n
       .andThen(increment)

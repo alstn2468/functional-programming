@@ -1,23 +1,23 @@
 ## Question
 
 ```ts
-// input
+// 입력
 const xs: Array<number> = [1, 2, 3]
 
-// transformation
+// 변환
 const double = (n: number): number => n * 2
 
-// result: I want an array where each `xs`' element is doubled
+// 결과: `xs`의 각 요소가 2배가 되는 배열을 원합니다.
 const ys: Array<number> = []
 for (let i = 0; i <= xs.length; i++) {
   ys.push(double(xs[i]))
 }
 ```
 
-Is the `for loop` correct?
+위의 `for 루프`가 올바르게 작성되었나요?
 
-## Answer
+## 정답
 
-No, it's not. The condition `i <= xs.length` should be `i < xs.length`.
+틀렸습니다. `i <= xs.length` 조건은 `i < xs.length`여야 합니다.
 
-As it is coded, `ys`'s value is `[ 2, 4, 6, NaN ]` instead of `[ 2, 4, 6 ]`
+코드가 작성된 대로 `ys`의 값은 `[ 2, 4, 6 ]`가 아닌 `[ 2, 4, 6, NaN ]`입니다.
