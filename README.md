@@ -333,40 +333,40 @@ pipe(10, concat(2), concat(3), concat(1), concat(2), console.log)
 
 마그마는 어떤 법칙도 따르지 않으며 폐쇠(`closure`) 요구 사항만 있습니다. 또 다른 법칙이 필요한 대수인 세미그룹을 보겠습니다.
 
-## Definition of a Semigroup
+## 세미그룹의 정의
 
-> Given a `Magma` if the `concat` operation is **associative** then it's a _semigroup_.
+> `concat` 연산이 **결합적**인 `Magma`가 주어지면 *세미그룹*입니다.
 
-The term "associative" means that the equation:
+"결합적"이라는 용어는 다음 방정식을 의미합니다.
 
 ```ts
 (x * y) * z = x * (y * z)
 
-// or
+// 또는
 concat(concat(a, b), c) = concat(a, concat(b, c))
 ```
 
-holds for any `x`, `y`, `z` in `A`.
+`A`인 모든 `x`, `y`, `z`에 적용됩니다.
 
-In layman terms _associativity_ tells us that we do not have to worry about parentheses in expressions and that we can simply write `x * y * z` (there's no ambiguity).
+*결합법칙*은 표현식에서 괄호에 대해 걱정할 필요가 없으며 간단히 `x * y * z`라고 쓸 수 있음을 알려줍니다. (모호함 없음)
 
-**Example**
+**예시**
 
-String concatenation benefits from associativity.
+문자열 연결은 결합법칙의 이점을 제공합니다.
 
 ```ts
 ("a" + "b") + "c" = "a" + ("b" + "c") = "abc"
 ```
 
-Every semigroup is a magma, but not every magma is a semigroup.
+모든 세미그룹은 마그마이지만 모든 마그마가 세미그룹은 아닙니다.
 
 <center>
-<img src="images/semigroup.png" width="300" alt="Magma vs Semigroup" />
+<img src="images/semigroup.png" width="300" alt="마그마 vs 세미그룹" />
 </center>
 
-**Example**
+**예시**
 
-The previous `MagmaSub` is not a semigroup because its `concat` operation is not associative.
+이전 `MagmaSub`는 `concat` 작업이 결합적이지 않기 때문에 세미그룹이 아닙니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -380,17 +380,17 @@ pipe(MagmaSub.concat(MagmaSub.concat(1, 2), 3), console.log) // => -4
 pipe(MagmaSub.concat(1, MagmaSub.concat(2, 3)), console.log) // => 2
 ```
 
-Semigroups capture the essence of parallelizable operations
+세미그룹은 병렬화 작업의 본질을 포착합니다.
 
-If we know that there is such an operation that follows the associativity law, we can further split a computation into two sub computations, each of them could be further split into sub computations.
+결합법칙을 따르는 연산이 있다는 것을 안다면 계산을 두 개의 하위 계산으로 더 나눌 수 있고, 각각은 하위 계산으로 더 나눌 수 있습니다.
 
 ```ts
 a * b * c * d * e * f * g * h = ((a * b) * (c * d)) * ((e * f) * (g * h))
 ```
 
-Sub computations can be run in parallel mode.
+곱셈은 병렬적으로 실행할 수 있습니다.
 
-As for `Magma`, `Semigroup`s are implemented through a TypeScript `interface`:
+`Magma`와 `Semigroup`은 TypeScript의 `인터페이스`를 이용해 구현됩니다.
 
 ```ts
 // fp-ts/lib/Semigroup.ts
@@ -398,19 +398,19 @@ As for `Magma`, `Semigroup`s are implemented through a TypeScript `interface`:
 interface Semigroup<A> extends Magma<A> {}
 ```
 
-The following law has to hold true:
+다음 법칙이 적용되어야 합니다.
 
-- **Associativity**: If `S` is a semigroup the following has to hold true:
+- **결합법칙**: `S`가 세미그룹인 경우 다음이 참이어야 합니다.
 
 ```ts
 S.concat(S.concat(x, y), z) = S.concat(x, S.concat(y, z))
 ```
 
-for every `x`, `y`, `z` of type `A`
+`A` 타입인 모든 `x`, `y`, `z`에 대해 만족해야 합니다.
 
-**Note**. Sadly it is not possible to encode this law using TypeScript's type system.
+**참고**: 안타깝게도 TypeScript의 타입 시스템을 이용해 이 법칙을 인코딩하는 것은 불가능합니다.
 
-Let's implement a semigroup for some `ReadonlyArray<string>`:
+`ReadonlyArray<string>`에 대한 세미그룹을 구현해 보겠습니다.
 
 ```ts
 import * as Se from 'fp-ts/Semigroup'
@@ -420,49 +420,49 @@ const Semigroup: Se.Semigroup<ReadonlyArray<string>> = {
 }
 ```
 
-The name `concat` makes sense for arrays (as we'll see later) but, depending on the context and the type `A` on whom we're implementing an instance, the `concat` semigroup operation may have different interpretations and meanings:
+`concat`이라는 이름은 배열에 대해 의미가 있지만(나중에 살펴보겠지만) 컨텍스트와 인스턴스를 구현하는 `A` 타입에 따라 `concat` 세미그룹 연산은 다른 해석과 의미를 가질 수 있습니다.
 
-- "concatenation"
-- "combination"
-- "merging"
-- "fusion"
-- "selection"
-- "sum"
-- "substitution"
+- "연결"
+- "조합"
+- "병합"
+- "융합"
+- "선택"
+- "합"
+- "치환"
 
-and many others.
+그리고 다른 많은 것들이 있습니다.
 
-**Example**
+**예시**
 
-This is how to implement the semigroup `(number, +)` where `+` is the usual addition of numbers:
+다음은 세미그룹 `(number, +)`를 구현하는 방법입니다. 여기서 `+`는 일반적인 숫자 덧셈입니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
 
-/** number `Semigroup` under addition */
+/** 덧셈을 하는 숫자 `Semigroup` */
 const SemigroupSum: Semigroup<number> = {
   concat: (first, second) => first + second
 }
 ```
 
-**Quiz**. Can the `concat` combinator defined in the 데모 [`01_retry.ts`](src/01_retry.ts) be used to define a `Semigroup` instance for the `RetryPolicy` type?
+**퀴즈**: 데모 [`01_retry.ts`](src/01_retry.ts)에 정의된 `concat` 결합자를 사용해 `RetryPolicy` 타입에 대한 `Semigroup` 인스턴스를 정의할 수 있을까요?
 
-> See the [answer here](src/quiz-answers/semigroup-데모-concat.md)
+> [정답은 여기](src/quiz-answers/semigroup-demo-concat.md)에서 확인할 수 있습니다.
 
-This is the implementation for the semigroup `(number, *)` where `*` is the usual number multiplication:
+다음은 세미그룹 `(number, *)`에 대한 구현입니다. 여기서 `*`는 일반적인 숫자 곱셈입니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
 
-/** number `Semigroup` under multiplication */
+/** 곱셈을 하는 숫자 `Semigroup` */
 const SemigroupProduct: Semigroup<number> = {
   concat: (first, second) => first * second
 }
 ```
 
-**Note** It is a common mistake to think about the _semigroup of numbers_, but for the same type `A` it is possible to define more **instances** of `Semigroup<A>`. We've seen how for `number` we can define a semigroup under _addition_ and _multiplication_. It is also possible to have `Semigroup`s that share the same operation but differ in types. `SemigroupSum` could've been implemented on natural numbers instead of unsigned floats like `number`.
+**참고**: *숫자의 세미그룹*에 대해 생각하는 것은 일반적인 실수이지만 동일한 타입 `A`에 대해 `Semigroup<A>`의 **인스턴스**를 더 많이 정의하는 것이 가능합니다. 우리는 `number`에 대해 *덧셈* 및 *곱셈*에서 세미그룹을 정의하는 방법을 살펴보았습니다. 동일한 작업을 공유하지만 타입이 다른 `Semigroup`을 가질 수도 있습니다. `SemigroupSum`은 `number`와 같은 부호 없는 부동 소수점 대신 자연수에서도 구현될 수 있었습니다.
 
-Another example, with the `string` type:
+`string` 타입을 사용하는 또 다른 예시가 있습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -472,7 +472,7 @@ const SemigroupString: Semigroup<string> = {
 }
 ```
 
-Another two examples, this time with the `boolean` type:
+이번에는 `boolean` 타입을 사용하는 다른 두 가지 예시가 있습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -486,15 +486,15 @@ const SemigroupAny: Semigroup<boolean> = {
 }
 ```
 
-## The `concatAll` function
+## `concatAll` 함수
 
-By definition `concat` combines merely two elements of `A` every time. Is it possible to combine any number of them?
+정의에 따라 `concat`은 매번 `A`의 두 요소만 결합합니다. 여러 개를 결합하는 것이 가능할까요?
 
-The `concatAll` function takes:
+`concatAll` 함수는 다음을 받습니다.
 
-- an instance of a semigroup
-- an initial value
-- an array of elements
+- 세미그룹의 인스턴스
+- 초기값
+- 요소 배열
 
 ```ts
 import * as S from 'fp-ts/Semigroup'
@@ -509,13 +509,13 @@ const product = S.concatAll(N.SemigroupProduct)(3)
 console.log(product([1, 2, 3, 4])) // => 72
 ```
 
-**Quiz**. Why do I need to provide an initial value?
+**Quiz**: 초기 값을 제공해야 하는 이유는 무엇인가요?
 
--> See the [answer here](src/quiz-answers/semigroup-concatAll-initial-value.md)
+-> [정답은 여기](src/quiz-answers/semigroup-concatAll-initial-value.md)에서 확인할 수 있습니다.
 
-**Example**
+**예시**
 
-Lets provide some applications of `concatAll`, by reimplementing some popular functions from the JavaScript standard library.
+JavaScript 표준 라이브러리에서 인기 있는 몇가지 기능을 다시 구현하여 `concatAll`을 응용하는 프로그램을 소개하겠습니다.
 
 ```ts
 import * as B from 'fp-ts/boolean'
@@ -535,42 +535,42 @@ const assign: (as: ReadonlyArray<object>) => object = concatAll(
 )({})
 ```
 
-**Quiz**. Is the following semigroup instance lawful (does it respect semigroup laws)?
+**퀴즈**: 다음 세미그룹 예시는 법칙을 만족하나요?
 
-> See the [answer here](src/quiz-answers/semigroup-first.md)
+> [정답은 여기](src/quiz-answers/semigroup-first.md)에서 확인할 수 있습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
 
-/** Always return the first argument */
+/** 항상 첫 번째 인자를 반환 */
 const first = <A>(): Semigroup<A> => ({
   concat: (first, _second) => first
 })
 ```
 
-**Quiz**. Is the following semigroup instance lawful?
+**퀴즈**: 다음 세미그룹 예시는 법칙을 만족하나요?
 
-> See the [answer here](src/quiz-answers/semigroup-second.md)
+> [정답은 여기](src/quiz-answers/semigroup-second.md)에서 확인할 수 있습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
 
-/** Always return the second argument */
+/** 항상 두 번째 인자를 반환 */
 const last = <A>(): Semigroup<A> => ({
   concat: (_first, second) => second
 })
 ```
 
-## The dual semigroup
+## 이중 세미그룹
 
-Given a semigroup instance, it is possible to obtain a new semigroup instance by simply swapping the order in which the operands are combined:
+세미그룹 인스턴스가 주어지면 피연산자가 결합되는 순서를 간단히 바꾸면 새로운 세미그룹 인스턴스를 얻을 수 있습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
 import { Semigroup } from 'fp-ts/Semigroup'
 import * as S from 'fp-ts/string'
 
-// This is a Semigroup combinator
+// 이것은 세미그룹 결합자입니다.
 const reverse = <A>(S: Semigroup<A>): Semigroup<A> => ({
   concat: (first, second) => S.concat(second, first)
 })
@@ -579,9 +579,9 @@ pipe(S.Semigroup.concat('a', 'b'), console.log) // => 'ab'
 pipe(reverse(S.Semigroup).concat('a', 'b'), console.log) // => 'ba'
 ```
 
-**Quiz**. This combinator makes sense because, generally speaking, the `concat` operation is not [**commutative**](https://en.wikipedia.org/wiki/Commutative_property), can you find an example where `concat` is commutative and one where it isn't?
+**퀴즈**: 이 결합자는 일반적으로 `concat` 작업이 [**가환적**](https://en.wikipedia.org/wiki/Commutative_property)이 아니기 때문에 의미가 있습니다. `concat`이 가환적인 예시와 그리고 그렇지 않은 예시를 찾을 수 있나요?
 
-> See the [answer here](src/quiz-answers/semigroup-commutative.md)
+> [정답은 여기](src/quiz-answers/semigroup-commutative.md)에서 확인할 수 있습니다.
 
 ## Semigroup product
 

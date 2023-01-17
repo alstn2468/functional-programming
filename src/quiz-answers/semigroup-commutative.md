@@ -1,10 +1,10 @@
-## Question
+## 문제
 
-Can you find a Semigroup example where `concat` is [**commutative**](https://en.wikipedia.org/wiki/Commutative_property) and one where it isn't?
+`concat`이 [**가환적**](https://en.wikipedia.org/wiki/Commutative_property)인 세미그룹 예시와 그렇지 않은 예시를 찾을 수 있나요?
 
-## Answer
+## 정답
 
-### Commutative:
+### 가환적인 예시
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -14,9 +14,9 @@ const SemigroupSum: Semigroup<number> = {
 }
 ```
 
-`concat(a, b) = a + b = b + a = concat(b, a)` as the addition is commutative
+덧셈이 가환적이므로 `concat(a, b) = a + b = b + a = concat(b, a)`는 가환적이다.
 
-### Not commutative:
+### 가환적이지 않은 예시
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
