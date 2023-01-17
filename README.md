@@ -31,9 +31,9 @@ npm i
 ```ts
 const program = pipe(
   input,
-  f1, // pure function
-  f2, // pure function
-  f3, // pure function
+  f1, // 순수 함수
+  f2, // 순수 함수
+  f3, // 순수 함수
   ...
 )
 ```
