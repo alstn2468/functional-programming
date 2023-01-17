@@ -818,9 +818,9 @@ export const getUser = (id: number): ReadonlyNonEmptyArray<User> => {
 - 세미그룹 인스턴스를 전달하고 싶지 않은 경우
 - API 소비자가 올바른 병합 전략을 결정할 수 있는 경우 (`concatAll` 사용)
 
-## 정렬 가능한 세미그룹
+## 순서 추론이 가능한 세미그룹
 
-Given that `number` is **a total order** (meaning that whichever `x` and `y` we choose, one of those two conditions has to hold true: `x <= y` or `y <= x`) we can define another two `Semigroup<number>` instances using the `min` or `max` operations.
+주어진 `number`가 **전순서**인 경우(즉, `x`와 `y`를 선택하면 `x <= y` 또는 `y <= x`의 두 조건 중 하나가 참이어야 합니다.) `min` 또는 `max` 연산을 사용해 또 다른 두 개의 `Semigroup<number>` 인스턴스를 정의할 수 있습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -834,13 +834,13 @@ const SemigroupMax: Semigroup<number> = {
 }
 ```
 
-**Quiz**. Why is it so important that `number` is a _total_ order?
+**퀴즈**: `숫자`가 *전*순서라는 것이 왜 중요할까요?
 
-It would be very useful to define such semigroups (`SemigroupMin` and `SemigroupMax`) for different types than `number`.
+`number`와 다른 타입에 대해 이런 세미그룹(`SemigroupMin`과 `SemigroupMax`)을 정의하는 것은 매우 유용합니다.
 
-Is it possible to capture the notion of being _totally ordered_ for other types?
+다른 타입에 대해 _전순서_ 개념을 포착할 수 있나요?
 
-To speak about _ordering_ we first need to capture the notion of _equality_.
+*순서*에 대해 이야기하려면 먼저 *동등성*의 개념을 파악해야 합니다.
 
 # Modelling equivalence with `Eq`
 
