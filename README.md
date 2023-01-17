@@ -583,21 +583,21 @@ pipe(reverse(S.Semigroup).concat('a', 'b'), console.log) // => 'ba'
 
 > [정답은 여기](src/quiz-answers/semigroup-commutative.md)에서 확인할 수 있습니다.
 
-## Semigroup product
+## 세미그룹 활용하기
 
-Let's try defining a semigroup instance for more complex types:
+보다 복잡한 타입에 대해 세미그룹 인스턴스를 정의해 보겠습니다.
 
 ```ts
 import * as N from 'fp-ts/number'
 import { Semigroup } from 'fp-ts/Semigroup'
 
-// models a vector starting at the origin
+// 원점에서 시작하는 벡터 모델링
 type Vector = {
   readonly x: number
   readonly y: number
 }
 
-// models a sum of two vectors
+// 두 벡터의 합 모델
 const SemigroupVector: Semigroup<Vector> = {
   concat: (first, second) => ({
     x: N.SemigroupSum.concat(first.x, second.x),
@@ -606,7 +606,7 @@ const SemigroupVector: Semigroup<Vector> = {
 }
 ```
 
-**Example**
+**예시**
 
 ```ts
 const v1: Vector = { x: 1, y: 1 }
@@ -616,33 +616,33 @@ console.log(SemigroupVector.concat(v1, v2)) // => { x: 2, y: 3 }
 ```
 
 <center>
-<img src="images/semigroupVector.png" width="300" alt="SemigroupVector" />
+<img src="images/semigroupVector.png" width="300" alt="세미그룹 벡터" />
 </center>
 
-Too much boilerplate? The good news is that the **mathematical theory** behind semigroups tells us we can implement a semigroup instance for a struct like `Vector` if we can implement a semigroup instance for each of its fields.
+보일러플레이트가 너무 많은가요? 좋은 소식은 세미그룹의 **수학 이론**에 따르면 각 필드에 대한 세미그룹 인스턴스를 구현할 수 있는 경우 `Vector`와 같은 구조체에 대한 세미그룹 인스턴스를 구현할 수 있다는 것입니다.
 
-Conveniently the `fp-ts/Semigroup` module exports a `struct` combinator:
+편리하게도 `fp-ts/Semigroup` 모듈은 `struct` 결합자를 사용할 수 있게합니다.
 
 ```ts
 import { struct } from 'fp-ts/Semigroup'
 
-// models the sum of two vectors
+// 두 벡터의 합 모델
 const SemigroupVector: Semigroup<Vector> = struct({
   x: N.SemigroupSum,
   y: N.SemigroupSum
 })
 ```
 
-**Note**. There is a combinator similar to `struct` that works with tuples: `tuple`
+**참고**: 튜플로 동작하는 `struct`와 유사한 결합자 `tuple`이 있습니다.
 
 ```ts
 import * as N from 'fp-ts/number'
 import { Semigroup, tuple } from 'fp-ts/Semigroup'
 
-// models a vector starting from origin
+// 원점에서 시작하는 벡터 모델링
 type Vector = readonly [number, number]
 
-// models the sum of two vectors
+// 두 벡터의 합 모델
 const SemigroupVector: Semigroup<Vector> = tuple(N.SemigroupSum, N.SemigroupSum)
 
 const v1: Vector = [1, 1]
@@ -651,7 +651,7 @@ const v2: Vector = [1, 2]
 console.log(SemigroupVector.concat(v1, v2)) // => [2, 3]
 ```
 
-**Quiz**. Is it true that given any `Semigroup<A>` and having chosen any `middle` of `A`, if I insert it between the two `concat` parameters the result is still a semigroup?
+**퀴즈**: `Semigroup<A>`이 주어지고 `A`의 `middle`을 선택한 경우 두 `concat` 매개변수 사이에 삽입하면 결과가 여전히 세미그룹이라는 것이 사실인가요?
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -672,11 +672,11 @@ pipe(
 ) // => 'a|b|c'
 ```
 
-## Finding a Semigroup instance for any type
+## 모든 타입의 Semigroup 인스턴스 찾기
 
-The associativity property is a very strong requirement, what happens if, given a specific type `A` we can't find an associative operation on `A`?
+결합법칙은 매우 강력한 요구 사항입니다. 특정 타입 `A`가 주어졌을 때 `A`에 대한 결합성을 찾을 수 없다면 어떻게 될까요?
 
-Suppose we have a type `User` defined as:
+다음과 같이 정의된 `User` 타입이 있다고 가정해 봅시다.
 
 ```ts
 type User = {
@@ -685,59 +685,59 @@ type User = {
 }
 ```
 
-and that inside my database we have multiple copies of the same `User` (e.g. they could be historical entries of its modifications).
+그리고 데이터베이스 안에는 동일한 `User`의 여러 복사본이 있습니다. (예시: 수정 사항에 대한 기록일 수 있습니다.)
 
 ```ts
-// internal APIs
+// 내부 API
 declare const getCurrent: (id: number) => User
 declare const getHistory: (id: number) => ReadonlyArray<User>
 ```
 
-and that we need to implement a public API
+공개 API를 구현해야 합니다.
 
 ```ts
 export declare const getUser: (id: number) => User
 ```
 
-which takes into account all of its copies depending on some criteria. The criteria should be to return the most recent copy, or the oldest one, or the current one, etc..
+일부 기준에 따라 모든 사본을 고려해야 합니다. 기준은 가장 최근 사본 또는 가장 오래된 사본 또는 현재 사본 등을 반환하는 것입니다.
 
-Naturally we can define a specific API for each of these criterias:
+당연히 각 기준에 대해 특정 API를 다음과 같이 정의할 수 있습니다.
 
 ```ts
 export declare const getMostRecentUser: (id: number) => User
 export declare const getLeastRecentUser: (id: number) => User
 export declare const getCurrentUser: (id: number) => User
-// etc...
+// 등등...
 ```
 
-Thus, to return a value of type `User` I need to consider all the copies and make a `merge` (or `selection`) of them, meaning I can model the criteria problem with a `Semigroup<User>`.
+따라서 `User` 타입의 값을 반환하려면 모든 복사본을 고려하고 `병합`(또는 `선택`)해야 합니다. 즉, `Semigroup<User>`로 기준 문제를 모델링할 수 있습니다.
 
-That being said, it is not really clear right now what it means to "merge two `User`s" nor if this merge operation is associative.
+즉, "두 개의 `사용자`를 병합"하는 것이 무엇을 의미하는지, 이 병합 작업이 연관되는지 여부가 지금 당장은 명확하지 않습니다.
 
-You can **always** define a Semigroup instance for **any** given type `A` by defining a semigroup instance not for `A` itself but for `NonEmptyArray<A>` called the **free semigroup** of `A`:
+`A` 자체가 아닌 `NonEmptyArray<A>`에 대한 세미그룹 인스턴스를 정의하여 **항상** 주어진 타입 `A`에 대한 세미그룹 인스턴스인 **자유 세미그룹**을 정의할 수 있습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
 
-// represents a non-empty array, meaning an array that has at least one element A
+// 비어 있지 않은 배열을 나타냅니다. 즉, 요소 ​​A가 하나 이상 있는 배열을 의미합니다.
 type ReadonlyNonEmptyArray<A> = ReadonlyArray<A> & {
   readonly 0: A
 }
 
-// the concatenation of two NonEmptyArrays is still a NonEmptyArray
+// 두 NonEmptyArray의 연결은 여전히 ​​NonEmptyArray입니다.
 const getSemigroup = <A>(): Semigroup<ReadonlyNonEmptyArray<A>> => ({
   concat: (first, second) => [first[0], ...first.slice(1), ...second]
 })
 ```
 
-and then we can map the elements of `A` to "singletons" of `ReadonlyNonEmptyArray<A>`, meaning arrays with only one element.
+그런 다음 `A`의 요소를 요소가 하나뿐인 배열을 의미하는 `ReadonlyNonEmptyArray<A>`의 "싱글톤"에 사상할 수 있습니다.
 
 ```ts
-// insert an element into a non empty array
+// 비어 있지 않은 배열에 요소 삽입
 const of = <A>(a: A): ReadonlyNonEmptyArray<A> => [a]
 ```
 
-Let's apply this technique to the `User` type:
+이 기술을 `User` 타입에 적용해 보겠습니다.
 
 ```ts
 import {
@@ -752,7 +752,7 @@ type User = {
   readonly name: string
 }
 
-// this semigroup is not for the `User` type but for `ReadonlyNonEmptyArray<User>`
+// 이 세미그룹은 `User` 타입이 아니라 `ReadonlyNonEmptyArray<User>`용입니다.
 const S: Semigroup<ReadonlyNonEmptyArray<User>> = getSemigroup<User>()
 
 declare const user1: User
@@ -762,19 +762,19 @@ declare const user3: User
 // const merge: ReadonlyNonEmptyArray<User>
 const merge = S.concat(S.concat(of(user1), of(user2)), of(user3))
 
-// I can get the same result by "packing" the users manually into an array
+// 사용자를 배열에 수동으로 "담아" 동일한 결과를 얻을 수 있습니다.
 const merge2: ReadonlyNonEmptyArray<User> = [user1, user2, user3]
 ```
 
-Thus, the free semigroup of `A` is merely another semigroup in which the elements are all possible, non empty, finite sequences of `A`.
+따라서 `A`의 자유 세미그룹은 요소가 모두 가능한 `A`의 유한 시퀀스인 비어 있지 않은 또 다른 세미그룹일 뿐입니다.
 
-The free semigroup of `A` can be seen as a _lazy_ way to `concat`enate elements of type `A` while preserving their data content.
+`A`의 자유 세미그룹은 데이터 내용을 보존하면서 `A` 타입의 요소를 `concat`하는 _지연_ 방식으로 볼 수 있습니다.
 
-The `merge` value, containing `[user1, user2, user3]`, tells us which are the elements to concatenate and in which order they are.
+`[user1, user2, user3]`을 포함하는 `merge` 값은 연결할 요소와 순서를 알려줍니다.
 
-Now I have three possible options to design the `getUser` API:
+이제 `getUser` API를 설계할 수 있는 세 가지 가능한 옵션이 있습니다.
 
-1. I can define `Semigroup<User>` and I want to get straight into `merge`ing.
+1. `Semigroup<User>`를 정의할 수 있으며 바로 `병합`하고 싶은 경우
 
 ```ts
 declare const SemigroupUser: Semigroup<User>
@@ -786,7 +786,7 @@ export const getUser = (id: number): User => {
 }
 ```
 
-2. I can't define `Semigroup<User>` or I want to leave the merging strategy open to implementation, thus I'll ask it to the API consumer:
+2. `Semigroup<User>`를 정의할 수 없거나 병합 전략을 구현에 공개하고 싶기 때문에 API 소비자에게 요청하는 경우
 
 ```ts
 export const getUser = (SemigroupUser: Semigroup<User>) => (
@@ -794,31 +794,31 @@ export const getUser = (SemigroupUser: Semigroup<User>) => (
 ): User => {
   const current = getCurrent(id)
   const history = getHistory(id)
-  // merge immediately
+  // 즉시 병합
   return concatAll(SemigroupUser)(current)(history)
 }
 ```
 
-3. I can't define `Semigroup<User>` nor I want to require it.
+3. `Semigroup<User>`를 정의할 수 없으며 요구하고 싶지 않은 경우
 
-In this case the free semigroup of `User` can come to the rescue:
+이 경우 `User`의 자유 세미그룹이 도움이 될 수 있습니다.
 
 ```ts
 export const getUser = (id: number): ReadonlyNonEmptyArray<User> => {
   const current = getCurrent(id)
   const history = getHistory(id)
-  // I DO NOT proceed with merging and return the free semigroup of User
+  // 병합을 진행하지 않고 User 자유 세미그룹을 반환합니다.
   return [current, ...history]
 }
 ```
 
-It should be noted that, even when I do have a `Semigroup<A>` instance, using a free semigroup might be still convenient for the following reasons:
+`Semigroup<A>` 인스턴스가 있는 경우에도 다음과 같은 이유로 자유 세미그룹을 사용하는 것이 편리할 수 있습니다.
 
-- avoids executing possibly expensive and pointless computations
-- avoids passing around the semigroup instance
-- allows the API consumer to decide which is the correct merging strategy (by using `concatAll`).
+- 비용이 많이 들고 무의미한 계산 실행을 방치하고 싶은 경우
+- 세미그룹 인스턴스를 전달하고 싶지 않은 경우
+- API 소비자가 올바른 병합 전략을 결정할 수 있는 경우 (`concatAll` 사용)
 
-## Order-derivable Semigroups
+## 정렬 가능한 세미그룹
 
 Given that `number` is **a total order** (meaning that whichever `x` and `y` we choose, one of those two conditions has to hold true: `x <= y` or `y <= x`) we can define another two `Semigroup<number>` instances using the `min` or `max` operations.
 
