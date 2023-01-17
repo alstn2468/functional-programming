@@ -259,37 +259,37 @@ console.log(pipe(2, double, double, double)) // => 16
 
 `01_retry.ts`에 있는 두 결합자 중에서 `concat`은 매우 강력한 함수형 프로그래밍 추상화인 세미그룹을 참조하기 때문에 특별히 언급됩니다.
 
-# Modelling composition with Semigroups
+# 세미그룹으로 합성 모델링하기
 
-A semigroup is a recipe to combine two, or more, values.
+세미그룹은 두 개 이상의 값을 결합하는 방법입니다.
 
-A semigroup is an **algebra**, which is generally defined as a specific combination of:
+세미그룹은 **대수**이며 일반적으로 다음의 특정 조합으로 정의됩니다.
 
-- one or more sets
-- one or more operations on those sets
-- zero or more laws on the previous operations
+- 하나 이상의 집합
+- 해당 집합에 대한 하나 이상의 연산
+- 이전 연산에 대한 0개 이상의 법칙
 
-Algebras are how mathematicians try to capture an idea in its purest form, eliminating everything that is superfluous.
+대수은 수학자들이 아이디어를 가장 순수한 형태로 포착해 불필요한 모든 것을 제거하는 방법입니다.
 
-> When an algebra is modified the only allowed operations are those defined by the algebra itself according to its own laws
+> 대수이 수정될 때 유일하게 허용되는 연산은 자체 법칙에 따라 대수 자체에 의해 정의된 연산입니다.
 
-Algebras can be thought of as an abstraction of **interfaces**:
+대수는 **인터페이스**의 추상화로 생각할 수 있습니다.
 
-> When an interface is modified the only allowed operations are those defined by the interface itself according to its own laws
+> 인터페이스가 수정될 때 허용되는 유일한 연산은 자체 법률에 따라 인터페이스 자체에 의해 정의된 연산입니다.
 
-Before getting into semigroups, let's see first an example of an algebra, a _magma_.
+세미그룹으로 들어가기 전에 먼저 대수의 예시인 *마그마*를 살펴보겠습니다.
 
-## Definition of a Magma
+## 마그마의 정의
 
-A Magma<A> is a very simple algebra:
+Magma<A>는 매우 간단한 대수입니다.
 
-- a set or type (A)
-- a `concat` operation
-- no laws to obey
+- 집합 또는 타입 (A)
+- `concat` 연산
+- 지켜야 할 법칙이 없습니다.
 
-**Note**: in most cases the terms _set_ and _type_ can be used interchangeably.
+**참고**: 대부분의 경우 *set*과 *type*이라는 용어는 같은 의미로 사용할 수 있습니다.
 
-We can use a TypeScript `interface` to model a Magma.
+TypeScript의 `interface`를 이용해 마그마를 모델링할 수 있습니다.
 
 ```ts
 interface Magma<A> {
@@ -297,12 +297,12 @@ interface Magma<A> {
 }
 ```
 
-Thus, we have have the ingredients for an algebra:
+따라서 우리는 대수의 요소를 가지고 있습니다.
 
-- a set `A`
-- an operation on the set `A`, `concat`. This operation is said to be _closed on_ the set `A` which means that whichever elements `A` we apply the operation on the result will still be an element of `A`. Since the result is still an `A`, it can be used again as an input for `concat` and the operation can be repeated how many times we want. In other words `concat` is a `combinator` for the type `A`.
+- 집합 `A`
+- 집합 `A`에 대한 `concat` 연산. 이 작업은 집합 `A`에서 _닫혀있다고_ 합니다. 이는 결과에 연산을 적용하는 요소 `A`가 여전히 `A`의 요소임을 의미합니다. 결과는 여전히 `A`이므로 `concat`의 입력으로 다시 사용할 수 있으며 원하는 만큼 작업을 반복할 수 있습니다. 즉 `concat`은 `A` 타입에 대한 `결합자`입니다.
 
-Let's implement a concrete instance of `Magma<A>` with `A` being the `number` type.
+`A`가 `number` 타입인 `Magma<A>`의 구체적인 인스턴스를 구현해 봅시다.
 
 ```ts
 import { Magma } from 'fp-ts/Magma'
@@ -317,7 +317,7 @@ const getPipeableConcat = <A>(M: Magma<A>) => (second: A) => (first: A): A =>
 
 const concat = getPipeableConcat(MagmaSub)
 
-// usage example
+// 사용 예시
 
 import { pipe } from 'fp-ts/function'
 
@@ -325,13 +325,13 @@ pipe(10, concat(2), concat(3), concat(1), concat(2), console.log)
 // => 2
 ```
 
-**Quiz**. The fact that `concat` is a _closed_ operation isn't a trivial detail. If `A` is the set of natural numbers (defined as positive integers) instead of the JavaScript number type (a set of positive and negative floats), could we define a `Magma<Natural>` with `concat` implemented like in `MagmaSub`? Can you think of any other `concat` operation on natural numbers for which the `closure` property isn't valid?
+**퀴즈**: `concat`이 *닫혀있는* 작업이라는 사실은 사소한 내용이 아닙니다. 만약 `A`가 JavaScript의 숫자 타입(양수 및 음수 부동 집합)이 아닌 자연수 집합(양의 정수)인 우리가 구현한 `MagmaSub`와 같이 `concat`을 사용해 `Magma<Natural>`을 정의할 수 있을까요? `closure` 속성이 유효하지 않은 자연수에 대한 다른 `concat` 작업을 생각할 수 있을까요?
 
-> See the [answer here](src/quiz-answers/magma-concat-closed.md)
+> [정답은 여기](src/quiz-answers/magma-concat-closed.md)에서 확인할 수 있습니다.
 
-**Definition**. Given `A` a non empty set and `*` a binary operation _closed on_ (or _internal to_) `A`, then the pair `(A, *)` is called a _magma_.
+**정의**: `A`가 비어 있지 않은 집합이고 `*`가 *닫혀있는*(또는 *내부적인*) `A`인 이항 연산인 경우 `(A, *)` 쌍을 *마그마*라고 합니다.
 
-Magmas do not obey any law, they only have the closure requirement. Let's see an algebra that do requires another law: semigroups.
+마그마는 어떤 법칙도 따르지 않으며 폐쇠(`closure`) 요구 사항만 있습니다. 또 다른 법칙이 필요한 대수인 세미그룹을 보겠습니다.
 
 ## Definition of a Semigroup
 
