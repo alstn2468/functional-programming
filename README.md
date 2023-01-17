@@ -40,7 +40,7 @@ const program = pipe(
 
 여기서 일어나는 일은 `input`이 첫 번째 함수 `f1`에 전달되고 두 번째 함수 `f2`에 전달되는 값을 반환하고, 두 번째 함수에서 세 번째 함수 `f3`에 인자로 전달되는 값을 반환하는 것 등이 있습니다.
 
-**시연**
+**데모**
 
 [`00_pipe_and_flow.ts`](src/00_pipe_and_flow.ts)
 
@@ -249,7 +249,7 @@ console.log(pipe(2, double, double, double)) // => 16
 
 이런 모듈을 구현해 봅시다.
 
-**시연**
+**데모**
 
 [`01_retry.ts`](src/01_retry.ts)
 
@@ -445,9 +445,9 @@ const SemigroupSum: Semigroup<number> = {
 }
 ```
 
-**Quiz**. Can the `concat` combinator defined in the 시연 [`01_retry.ts`](src/01_retry.ts) be used to define a `Semigroup` instance for the `RetryPolicy` type?
+**Quiz**. Can the `concat` combinator defined in the 데모 [`01_retry.ts`](src/01_retry.ts) be used to define a `Semigroup` instance for the `RetryPolicy` type?
 
-> See the [answer here](src/quiz-answers/semigroup-시연-concat.md)
+> See the [answer here](src/quiz-answers/semigroup-데모-concat.md)
 
 This is the implementation for the semigroup `(number, *)` where `*` is the usual number multiplication:
 
@@ -1422,7 +1422,7 @@ console.log(
 
 **Quiz**. Given a type `A` is it possible to define a `Semigroup<Ord<A>>` instance? What could it possibly represent?
 
-**시연**
+**데모**
 
 # Modeling composition through Monoids
 
@@ -1631,7 +1631,7 @@ const Monoid: Monoid<Point> = tuple(N.MonoidSum, N.MonoidSum)
 
 **Quiz**. Is it possible to define a "free monoid" for a generic type `A`?
 
-**시연** (implementing a system to draw geoetric shapes on canvas)
+**데모** (implementing a system to draw geoetric shapes on canvas)
 
 [`03_shapes.ts`](src/03_shapes.ts)
 
@@ -3448,7 +3448,7 @@ export const program = (ns: ReadonlyArray<number>): Option<string> =>
 
 Practically, using `Option`, we're always in front of the `happy path`, error handing happens behind the scenes thanks to `map`.
 
-**시연** (optional)
+**데모** (optional)
 
 [`04_functor.ts`](src/04_functor.ts)
 
@@ -4033,7 +4033,7 @@ import { Reader } from 'fp-ts/Reader'
 const of = <R, A>(a: A): Reader<R, A> => () => a
 ```
 
-**시연**
+**데모**
 
 [`05_applicative.ts`](src/05_applicative.ts)
 
@@ -4902,6 +4902,6 @@ const DepsAsync: Deps = {
 program5(DepsAsync)().then(console.log)
 ```
 
-**시연**
+**데모**
 
 [`06_game.ts`](src/06_game.ts)
