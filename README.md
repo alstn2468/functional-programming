@@ -842,11 +842,11 @@ const SemigroupMax: Semigroup<number> = {
 
 *순서*에 대해 이야기하려면 먼저 *동등성*의 개념을 파악해야 합니다.
 
-# Modelling equivalence with `Eq`
+# `Eq`를 이용한 동등성 모델링
 
-Yet again, we can model the notion of equality.
+다시 말하지만, 우리는 동등의 개념을 모델링할 수 있습니다.
 
-_Equivalence relations_ capture the concept of _equality_ of elements of the same type. The concept of an _equivalence relation_ can be implemented in TypeScript with the following interface:
+*동등 관계*는 동일한 타입의 요소의 *동등성* 개념을 포착합니다. *동등 관계*의 개념은 인터페이스를 사용하여 다음과 같이 TypeScript에서 구현할 수 있습니다.
 
 ```ts
 interface Eq<A> {
@@ -854,14 +854,14 @@ interface Eq<A> {
 }
 ```
 
-Intuitively:
+직관적으로
 
-- if `equals(x, y) = true` then we say `x` and `y` are equal
-- if `equals(x, y) = false` then we say `x` and `y` are different
+- `equals(x, y) = true`이면 `x`와 `y`가 같다고 합니다.
+- `equals(x, y) = false`이면 `x`와 `y`가 다르다고 합니다.
 
-**Example**
+**예시**
 
-This is an instance of `Eq` for the `number` type:
+이것은 `number` 타입에 대한 `Eq`의 인스턴스입니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -875,15 +875,15 @@ pipe(EqNumber.equals(1, 1), console.log) // => true
 pipe(EqNumber.equals(1, 2), console.log) // => false
 ```
 
-The following laws have to hold true:
+다음 법칙을 만족해야 합니다.
 
-1. **Reflexivity**: `equals(x, x) === true`, for every `x` in `A`
-2. **Symmetry**: `equals(x, y) === equals(y, x)`, for every `x`, `y` in `A`
-3. **Transitivity**: if `equals(x, y) === true` and `equals(y, z) === true`, then `equals(x, z) === true`, for every `x`, `y`, `z` in `A`
+1. **재귀성**: `A`인 모든 `x`에 대해 `equals(x, x) === true`를 만족해야 합니다.
+2. **대칭성**: `A`인 모든 `x`, `y`에 대해 `equals(x, y) === equals(y, x)`를 만족해야 합니다.
+3. **추이적**: `A`인 모든 `x`, `y`, `z`에 대해 `equals(x, y) === true`이고 `equals(y, z) === true`라면 `equals(x, z) === true`를 만족해야 합니다.
 
-**Quiz**. Would a combinator `reverse: <A>(E: Eq<A>) => Eq<A>` make sense?
+**퀴즈**: 결합자 `reverse: <A>(E: Eq<A>) => Eq<A>`가 의미가 있을까요?
 
-**Quiz**. Would a combinator `not: <A>(E: Eq<A>) => Eq<A>` make sense?
+**퀴즈**: 결합자 `not: <A>(E: Eq<A>) => Eq<A>`가 의미가 있을까요?
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -893,7 +893,7 @@ export const not = <A>(E: Eq<A>): Eq<A> => ({
 })
 ```
 
-**Example**
+**예시**
 
 Let's see the first example of the usage of the `Eq` abstraction by defining a function `elem` that checks whether a given value is an element of `ReadonlyArray`.
 
