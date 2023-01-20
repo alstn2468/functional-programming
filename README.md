@@ -895,7 +895,7 @@ export const not = <A>(E: Eq<A>): Eq<A> => ({
 
 **예시**
 
-Let's see the first example of the usage of the `Eq` abstraction by defining a function `elem` that checks whether a given value is an element of `ReadonlyArray`.
+주어진 값이 `ReadonlyArray`의 요소인지 확인하는 `elem` 함수를 정의해 `Eq` 추상화를 사용하는 첫 번째 예시를 살펴보겠습니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -910,14 +910,14 @@ pipe([1, 2, 3], elem(N.Eq)(2), console.log) // => true
 pipe([1, 2, 3], elem(N.Eq)(4), console.log) // => false
 ```
 
-Why would we not use the native `includes` Array method?
+배열의 기본 메소드인 `includes`을 사용하지 않는 이유는 무엇일까요?
 
 ```ts
 console.log([1, 2, 3].includes(2)) // => true
 console.log([1, 2, 3].includes(4)) // => false
 ```
 
-Let's define some `Eq` instance for more complex types.
+좀 더 복잡한 타입을 위한 `Eq` 인스턴스를 정의해 보겠습니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -935,7 +935,7 @@ console.log(EqPoint.equals({ x: 1, y: 2 }, { x: 1, y: 2 })) // => true
 console.log(EqPoint.equals({ x: 1, y: 2 }, { x: 1, y: -2 })) // => false
 ```
 
-and check the results of `elem` and `includes`
+`elem` 함수와 `includes` 함수의 결과를 확인해 봅시다.
 
 ```ts
 const points: ReadonlyArray<Point> = [
@@ -950,13 +950,13 @@ console.log(points.includes(search)) // => false :(
 console.log(pipe(points, elem(EqPoint)(search))) // => true :)
 ```
 
-**Quiz** (JavaScript). Why does the `includes` method returns `false`?
+**퀴즈** (JavaScript): 왜 `includes` 메소드가 `false`를 반환할까요?
 
--> See the [answer here](src/quiz-answers/javascript-includes.md)
+-> [정답은 여기](src/quiz-answers/javascript-includes.md)에서 확인할 수 있습니다.
 
-Abstracting the concept of equality is of paramount importance, especially in a language like JavaScript where some data types do not offer handy APIs for checking user-defined equality.
+동등성의 개념을 추상화하는 것은 특히 일부 데이터 타입이 사용자 정의 동등을 확인하기 위한 편리한 API를 제공하지 않는 JavaScript와 같은 언어에서 가장 중요합니다.
 
-The JavaScript native `Set` datatype suffers by the same issue:
+JavaScript에 내장 되어있는 `Set` 데이터 타입은 같은 문제로 인해 어려움을 겪습니다.
 
 ```ts
 type Point = {
@@ -972,13 +972,13 @@ console.log(points)
 // => Set { { x: 0, y: 0 }, { x: 0, y: 0 } }
 ```
 
-Given the fact that `Set` uses `===` ("strict equality") for comparing values, `points` now contains **two identical copies** of `{ x: 0, y: 0 }`, a result we definitely did not want. Thus it is convenient to define a new API to add an element to a `Set`, one that leverages the `Eq` abstraction.
+`Set`이 값을 비교하기 위해 `===`("엄격한 동등")을 사용한다는 사실을 감안할 때 `points`에는 이제 `{ x: 0, y: 0 }`의 **두 개의 동일한 복사본**이 포함되며 우리는 이런 결과를 확실히 원하지 않았습니다. 따라서 `Eq` 추상화를 사용하는 `Set`에 요소를 추가하는 새 API를 정의하는 것이 편리합니다.
 
-**Quiz**. What would be the signature of this API?
+**퀴즈**: 이 API의 시그니처는 무엇일까요?
 
-Does `EqPoint` require too much boilerplate? The good news is that theory offers us yet again the possibility of implementing an `Eq` instance for a struct like `Point` if we are able to define an `Eq` instance for each of its fields.
+`EqPoint`에 너무 많은 보일러플레이트가 필요한가요? 좋은 소식은 각 필드에 대해 `Eq` 인스턴스를 정의할 수 있는 경우 `Point`와 같은 구조체에 대해 `Eq` 인스턴스를 구현할 가능성을 제공한다는 것입니다.
 
-Conveniently the `fp-ts/Eq` module exports a `struct` combinator:
+편리하게도 `fp-ts/Eq` 모듈은 `struct` 결합자를 사용할 수 있게합니다.
 
 ```ts
 import { Eq, struct } from 'fp-ts/Eq'
@@ -995,7 +995,7 @@ const EqPoint: Eq<Point> = struct({
 })
 ```
 
-**Note**. Like for Semigroup, we aren't limited to `struct`-like data types, we also have combinators for working with tuples: `tuple`
+**참고**: 세미그룹과 마찬가지로 `struct`와 같은 데이터 타입에 국한되지 않고 튜플 을 위한 결합자 `tuple`도 있습니다.
 
 ```ts
 import { Eq, tuple } from 'fp-ts/Eq'
@@ -1009,7 +1009,7 @@ console.log(EqPoint.equals([1, 2], [1, 2])) // => true
 console.log(EqPoint.equals([1, 2], [1, -2])) // => false
 ```
 
-There are other combinators exported by `fp-ts`, here we can see a combinator that allows us to derive an `Eq` instance for `ReadonlyArray`s.
+`fp-ts`에서 사용할 수 있는 다른 결합자가 있습니다. 여기에서 `ReadonlyArray`에 대한 `Eq` 인스턴스를 파생시킬 수 있는 결합자를 확인할 수 있습니다.
 
 ```ts
 import { Eq, tuple } from 'fp-ts/Eq'
@@ -1023,7 +1023,7 @@ const EqPoint: Eq<Point> = tuple(N.Eq, N.Eq)
 const EqPoints: Eq<ReadonlyArray<Point>> = RA.getEq(EqPoint)
 ```
 
-Similarly to Semigroups, it is possible to define more than one `Eq` instance for the same given type. Suppose we have modeled a `User` with the following type:
+세미그룹과 비슷하게 주어진 동일한 타입에 대해 하나 이상의 `Eq` 인스턴스를 정의할 수 있습니다. 다음 타입으로 `User`를 모델링했다고 가정해 봅시다.
 
 ```ts
 type User = {
@@ -1032,7 +1032,7 @@ type User = {
 }
 ```
 
-we can define a "standard" `Eq<User>` instance using the `struct` combinator:
+`struct` 결합자를 사용해 "표준" `Eq<User>` 인스턴스를 정의할 수 있습니다.
 
 ```ts
 import { Eq, struct } from 'fp-ts/Eq'
@@ -1050,18 +1050,18 @@ const EqStandard: Eq<User> = struct({
 })
 ```
 
-Several languages, even pure functional languages like Haskell, do not allow to have more than one `Eq` instance per data type. But we may have different contexts where the meaning of `User` equality might differ. One common context is where two `User`s are equal if their `id` field is equal.
+여러 언어, 심지어 Haskell과 같은 순수 함수형 언어도 데이터 타입당 하나 이상의 `Eq` 인스턴스를 허용하지 않습니다. 그러나 `User` 타입의 동등의 의미가 다를 수 있다는 다른 맥락이 있을 수 있습니다. 하나의 일반적인 맥락은 `id` 필드가 동일한 경우 두 `User`는 같습니다.
 
 ```ts
-/** two users are equal if their `id` fields are equal */
+/** `id` 필드가 동일한 경우 두 User는 같습니다. */
 const EqID: Eq<User> = {
   equals: (first, second) => N.Eq.equals(first.id, second.id)
 }
 ```
 
-Now that we made an abstract concept concrete by representing it as a data structure, we can programmatically manipulate `Eq` instances like we do with other data structures. Let's see an example.
+이제 데이터 구조로 표현하여 추상적인 개념을 구체적으로 만들었으므로 다른 데이터 구조와 마찬가지로 `Eq` 인스턴스를 프로그래밍 방식으로 다룰 수 있습니다. 예시를 확인해 보겠습니다.
 
-**Example**. Rather than manually defining `EqId` we can use the combinator `contramap`: given an instance `Eq<A>` and a function from `B` to `A`, we can derive an `Eq<B>`
+**예시**: `EqId`를 수동으로 정의하는 대신 `contramap` 결합자를 사용할 수 있습니다. 인스턴스 `Eq<A>`와 `B`에서 `A`로의 함수가 주어지면 `Eq<B>`를 파생시킬 수 있습니다.
 
 ```ts
 import { Eq, struct, contramap } from 'fp-ts/Eq'
@@ -1086,19 +1086,19 @@ const EqID: Eq<User> = pipe(
 
 console.log(
   EqStandard.equals({ id: 1, name: 'Giulio' }, { id: 1, name: 'Giulio Canti' })
-) // => false (because the `name` property differs)
+) // => false (`name` 속성이 다르기 때문에 거짓)
 
 console.log(
   EqID.equals({ id: 1, name: 'Giulio' }, { id: 1, name: 'Giulio Canti' })
-) // => true (even though the `name` property differs)
+) // => true (`name` 속성이 다르더라도 참)
 
 console.log(EqID.equals({ id: 1, name: 'Giulio' }, { id: 2, name: 'Giulio' }))
-// => false (even though the `name` property is equal)
+// => false (`name` 속성이 같더라도 거짓)
 ```
 
-**Quiz**. Given a data type `A`, is it possible to define a `Semigroup<Eq<A>>`? What could it represent?
+**퀴즈**: 데이터 타입 `A`가 주어지면 `Semigroup<Eq<A>>`를 정의할 수 있을까요? 그것은 무엇을 표현할 수 있나요?
 
-## Modeling ordering relations with `Ord`
+## `Ord`를 사용한 순서 관계 모델링
 
 In the previous chapter regarding `Eq` we were dealing with the concept of **equality**. In this one we'll deal with the concept of **ordering**.
 
