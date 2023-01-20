@@ -1100,9 +1100,9 @@ console.log(EqID.equals({ id: 1, name: 'Giulio' }, { id: 2, name: 'Giulio' }))
 
 ## `Ord`를 사용한 순서 관계 모델링
 
-In the previous chapter regarding `Eq` we were dealing with the concept of **equality**. In this one we'll deal with the concept of **ordering**.
+`Eq`에 대한 이전 장에서 **동등**의 개념을 다루었습니다. 여기서는 **순서**의 개념을 다루어 보겠습니다.
 
-The concept of a total order relation can be implemented in TypeScript as following:
+전순서 관계의 개념은 다음과 같이 TypeScript에서 구현할 수 있습니다.
 
 ```ts
 import { Eq } from 'fp-ts/lib/Eq'
@@ -1114,15 +1114,15 @@ interface Ord<A> extends Eq<A> {
 }
 ```
 
-Resulting in:
+다음과 같은 결과를 갖습니다.
 
-- `x < y` if and only if `compare(x, y) = -1`
-- `x = y` if and only if `compare(x, y) = 0`
-- `x > y` if and only if `compare(x, y) = 1`
+- `compare(x, y) = -1`인 경우 `x < y`
+- `compare(x, y) = 0`인 경우 `x = y`
+- `compare(x, y) = 1`인 경우 `x > y`
 
-**Example**
+**예시**
 
-Let's try to define an `Ord` instance for the type `number`:
+`number` 타입에 대한 `Ord` 인스턴스를 정의해 봅시다:
 
 ```ts
 import { Ord } from 'fp-ts/Ord'
@@ -1133,23 +1133,23 @@ const OrdNumber: Ord<number> = {
 }
 ```
 
-The following laws have to hold true:
+다음과 같은 법칙이 만족해야 합니다.
 
-1. **Reflexivity**: `compare(x, x) <= 0`, for every `x` in `A`
-2. **Antisymmetry**: if `compare(x, y) <= 0` and `compare(y, x) <= 0` then `x = y`, for every `x`, `y` in `A`
-3. **Transitivity**: if `compare(x, y) <= 0` and `compare(y, z) <= 0` then `compare(x, z) <= 0`, for every `x`, `y`, `z` in `A`
+1. **재귀성**: `A`인 모든 `x`에 대하여 `compare(x, x) <= 0`를 만족해야 합니다.
+2. **반대칭성**: `A`인 모든 `x`, `y`에 대하여 `compare(x, y) <= 0`이고 `compare(y, x) <= 0`라면 `x = y`입니다.
+3. **추이적**: `A`인 `x`, `y`, `z`에 대하여 `compare(x, y) <= 0`이고 `compare(y, z) <= 0`라면 `compare(x, z) <= 0`를 만족해야 합니다.
 
-`compare` has also to be compatible with the `equals` operation from `Eq`:
+`compare`는 `Eq`의 `equals` 연산과도 호환되어야 합니다.
 
-`compare(x, y) === 0` if and only if `equals(x, y) === true`, for every `x`, `y` in `A`
+`A`인 모든 `x`, `y`에 대해 `equals(x, y) === true`인 경우에 `compare(x, y) === 0`입니다.
 
-**Note**. `equals` can be derived from `compare` in the following way:
+**참고**: `equals`은 다음 처럼 `compare`에서 파생될 수 있습니다.
 
 ```ts
 equals: (first, second) => compare(first, second) === 0
 ```
 
-In fact the `fp-ts/Ord` module exports a handy helper `fromCompare` which allows us to define an `Ord` instance simply by supplying the `compare` function:
+사실 `fp-ts/Ord` 모듈에는 `compare` 함수를 전달해 `Ord` 인스턴스를 정의할 수 있는 편리한 `fromCompare`가 있습니다.
 
 ```ts
 import { Ord, fromCompare } from 'fp-ts/Ord'
@@ -1159,9 +1159,9 @@ const OrdNumber: Ord<number> = fromCompare((first, second) =>
 )
 ```
 
-**Quiz**. Is it possible to define an `Ord` instance for the game Rock-Paper-Scissor where `move1 <= move2` if `move2` beats `move1`?
+**퀴즈**: `move2`가 `move1`을 이길 경우 `move1 <= move2`인 가위바위보 게임에 대한 `Ord` 인스턴스를 정의할 수 있나요?
 
-Let's see a practical usage of an `Ord` instance by defining a `sort` function which orders the elements of a `ReadonlyArray`.
+`ReadonlyArray`의 요소를 정렬하는 `sort` 함수를 정의해 `Ord` 인스턴스의 실제 사용법을 살펴보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1175,9 +1175,9 @@ export const sort = <A>(O: Ord<A>) => (
 pipe([3, 1, 2], sort(N.Ord), console.log) // => [1, 2, 3]
 ```
 
-**Quiz** (JavaScript). Why does the implementation leverages the native Array `slice` method?
+**퀴즈** (JavaScript): 배열의 내장 메소드인 `slice`를 활용하는 이유는 무엇일까요?
 
-Let's see another `Ord` pratical usage by defining a `min` function that returns the smallest of two values:
+두 값 중 가장 작은 값을 반환하는 `min` 함수를 정의해 또 다른 `Ord`의 실용적인 사용법을 살펴보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1190,11 +1190,11 @@ const min = <A>(O: Ord<A>) => (second: A) => (first: A): A =>
 pipe(2, min(N.Ord)(1), console.log) // => 1
 ```
 
-## Dual Ordering
+## 이중 순서
 
-In the same way we could invert the `concat` operation to obtain the `dual semigroup` using the `reverse` combinator, we can invert the `compare` operation to get the dual ordering.
+`reverse` 결합자를 사용해 `이중 세미그룹`을 얻기 위해 `concat` 연산을 반전하는 것과 마찬가지로 이중 순서를 얻기 위해 `compare` 연산을 반전할 수 있습니다.
 
-Let's define the `reverse` combinator for `Ord`:
+`Ord`에 대한 `reverse` 결합자를 정의해 보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1205,7 +1205,7 @@ export const reverse = <A>(O: Ord<A>): Ord<A> =>
   fromCompare((first, second) => O.compare(second, first))
 ```
 
-A usage example for `reverse` is obtaining a `max` function from the `min` one:
+`reverse`의 사용 예시는 `min` 함수에서 `max` 함수를 얻는 것입니다.
 
 ```ts
 import { flow, pipe } from 'fp-ts/function'
@@ -1221,7 +1221,7 @@ const max = flow(reverse, min)
 pipe(2, max(N.Ord)(1), console.log) // => 2
 ```
 
-The **totality** of ordering (meaning that given any `x` and `y`, one of the two conditions needs to hold true: `x <= y` or `y <= z`) may appear obvious when speaking about numbers, but that's not always the case. Let's see a slightly more complex scenario:
+순서의 **전체성**(`x` 및 `y`가 주어졌을 때 `x <= y` 또는 `y <= z` 중 하나가 참이어야 함을 의미합니다)은 숫자에 대해서 얘기할 때 명백하게 나타날 수 있지만 항상 렇지는 않습니다. 약간 더 복잡한 경우를 살펴보겠습니다.
 
 ```ts
 type User = {
@@ -1230,11 +1230,11 @@ type User = {
 }
 ```
 
-It's not really clear when a `User` is "smaller or equal" than another `User`.
+`User`가 다른 `User`보다 "작거나 같은지"는 ​​명확하지 않습니다.
 
-How can we define an `Ord<User>` instance?
+`Ord<User>` 인스턴스를 어떻게 정의할 수 있을까요?
 
-That depends on the context, but a possible choice might be ordering `User`s by their age:
+상황에 따라 다르지만 가능한 선택은 `User`의 나이를 기준으로 정렬하는 것입니다.
 
 ```ts
 import * as N from 'fp-ts/number'
@@ -1250,7 +1250,7 @@ const byAge: Ord<User> = fromCompare((first, second) =>
 )
 ```
 
-Again we can get rid of some boilerplate using the `contramap` combinatorL given an `Ord<A>` instance and a function from `B` to `A`, it is possible to derive `Ord<B>`:
+다시 `Ord<A>` 인스턴스와 `B`에서 `A`로의 함수를 전달하는 `contramap` 결합자를 사용하여 일부 보일러플레이트를 제거할 수 있으며 `Ord<B>`를 파생시킬 수 있습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1268,7 +1268,7 @@ const byAge: Ord<User> = pipe(
 )
 ```
 
-We can get the youngest of two `User`s using the previously defined `min` function.
+앞서 정의한 `min` 함수를 사용하여 두 `User` 중 어린 사람을 얻을 수 있습니다.
 
 ```ts
 // const getYounger: (second: User) => (first: User) => User
@@ -1281,20 +1281,20 @@ pipe(
 ) // => { name: 'Giulio', age: 47 }
 ```
 
-**Quiz**. In the `fp-ts/ReadonlyMap` module the following API is exposed:
+**퀴즈**: `fp-ts/ReadonlyMap` 모듈에는 다음 API가 있습니다.
 
 ```ts
 /**
- * Get a sorted `ReadonlyArray` of the keys contained in a `ReadonlyMap`.
+ * `ReadonlyMap`의 키의 정렬된 `ReadonlyArray`를 가져옵니다.
  */
 declare const keys: <K>(
   O: Ord<K>
 ) => <A>(m: ReadonlyMap<K, A>) => ReadonlyArray<K>
 ```
 
-why does this API requires an instance for `Ord<K>`?
+이 API에 `Ord<K>`에 대한 인스턴스가 필요한 이유가 무엇일까요?
 
-Let's finally go back to the very first issue: defining two semigroups `SemigroupMin` and `SemigroupMax` for types different than `number`:
+마지막으로 맨 처음 문제인 `number`와 다른 타입에 대해 `SemigroupMin`과 `SemigroupMax`를 정의하는 첫 번째 문제로 돌아가 보겠습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -1308,7 +1308,7 @@ const SemigroupMax: Semigroup<number> = {
 }
 ```
 
-Now that we have the `Ord` abstraction we can do it:
+이제 `Ord` 추상화가 있으므로 다음과 같이 사용할 수 있습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1342,25 +1342,25 @@ console.log(
 ) // => { name: 'Guido', age: 50 }
 ```
 
-**Example**
+**예시**
 
-Let's recap all of this with one final example (adapted from [Fantas, Eel, and Specification 4: Semigroup](http://www.tomharding.me/2017/03/13/fantas-eel-and-specification-4/)).
+마지막 예시([Fantas, Eel, and Specification 4: Semigroup](http://www.tomharding.me/2017/03/13/fantas-eel-and-specification-4/)에서 인용)로 모든 것을 요약해 보겠습니다.
 
-Suppose we need to build a system where, in a database, there are records of customers implemented in the following way:
+데이터베이스에 다음과 같은 방식으로 구현된 고객 레코드가 있는 시스템을 구축해야 한다고 가정해 봅시다.
 
 ```ts
 interface Customer {
   readonly name: string
   readonly favouriteThings: ReadonlyArray<string>
-  readonly registeredAt: number // since epoch
-  readonly lastUpdatedAt: number // since epoch
+  readonly registeredAt: number // 예로부터
+  readonly lastUpdatedAt: number // 예로부터
   readonly hasMadePurchase: boolean
 }
 ```
 
-For some reason, there might be duplicate records for the same person.
+어떤 이유로 같은 사람에 대한 중복 기록이 있을 수 있습니다.
 
-We need a merging strategy. Well, that's Semigroup's bread and butter!
+병합 전략이 필요합니다. 음, 그것은 세미그룹의 역할입니다!
 
 ```ts
 import * as B from 'fp-ts/boolean'
@@ -1374,21 +1374,21 @@ import * as S from 'fp-ts/string'
 interface Customer {
   readonly name: string
   readonly favouriteThings: ReadonlyArray<string>
-  readonly registeredAt: number // since epoch
-  readonly lastUpdatedAt: number // since epoch
+  readonly registeredAt: number // 예로부터
+  readonly lastUpdatedAt: number // 예로부터
   readonly hasMadePurchase: boolean
 }
 
 const SemigroupCustomer: Semigroup<Customer> = struct({
-  // keep the longer name
+  // 더 긴 이름을 유지합니다.
   name: max(pipe(N.Ord, contramap(S.size))),
-  // accumulate things
+  // 값들을 축적합니다.
   favouriteThings: RA.getSemigroup<string>(),
-  // keep the least recent date
+  // 가장 최근 날짜를 유지합니다.
   registeredAt: min(N.Ord),
-  // keep the most recent date
+  // 가장 최근 날짜를 유지합니다.
   lastUpdatedAt: max(N.Ord),
-  // boolean semigroup under disjunction
+  // 논리합 기반의 불린 세미그룹을 사용합니다.
   hasMadePurchase: B.SemigroupAny
 })
 
@@ -1420,7 +1420,7 @@ console.log(
 */
 ```
 
-**Quiz**. Given a type `A` is it possible to define a `Semigroup<Ord<A>>` instance? What could it possibly represent?
+**퀴즈**: 타입 `A`가 주어지면 `Semigroup<Ord<A>>` 인스턴스를 정의할 수 있나요? 그것은 무엇을 표현할 수 있나요?
 
 **데모**
 
