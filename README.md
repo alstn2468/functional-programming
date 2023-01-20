@@ -842,11 +842,11 @@ const SemigroupMax: Semigroup<number> = {
 
 *순서*에 대해 이야기하려면 먼저 *동등성*의 개념을 파악해야 합니다.
 
-# Modelling equivalence with `Eq`
+# `Eq`를 이용한 동등성 모델링
 
-Yet again, we can model the notion of equality.
+다시 말하지만, 우리는 동등의 개념을 모델링할 수 있습니다.
 
-_Equivalence relations_ capture the concept of _equality_ of elements of the same type. The concept of an _equivalence relation_ can be implemented in TypeScript with the following interface:
+*동등 관계*는 동일한 타입의 요소의 *동등성* 개념을 포착합니다. *동등 관계*의 개념은 인터페이스를 사용하여 다음과 같이 TypeScript에서 구현할 수 있습니다.
 
 ```ts
 interface Eq<A> {
@@ -854,14 +854,14 @@ interface Eq<A> {
 }
 ```
 
-Intuitively:
+직관적으로
 
-- if `equals(x, y) = true` then we say `x` and `y` are equal
-- if `equals(x, y) = false` then we say `x` and `y` are different
+- `equals(x, y) = true`이면 `x`와 `y`가 같다고 합니다.
+- `equals(x, y) = false`이면 `x`와 `y`가 다르다고 합니다.
 
-**Example**
+**예시**
 
-This is an instance of `Eq` for the `number` type:
+이것은 `number` 타입에 대한 `Eq`의 인스턴스입니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -875,15 +875,15 @@ pipe(EqNumber.equals(1, 1), console.log) // => true
 pipe(EqNumber.equals(1, 2), console.log) // => false
 ```
 
-The following laws have to hold true:
+다음 법칙을 만족해야 합니다.
 
-1. **Reflexivity**: `equals(x, x) === true`, for every `x` in `A`
-2. **Symmetry**: `equals(x, y) === equals(y, x)`, for every `x`, `y` in `A`
-3. **Transitivity**: if `equals(x, y) === true` and `equals(y, z) === true`, then `equals(x, z) === true`, for every `x`, `y`, `z` in `A`
+1. **재귀성**: `A`인 모든 `x`에 대해 `equals(x, x) === true`를 만족해야 합니다.
+2. **대칭성**: `A`인 모든 `x`, `y`에 대해 `equals(x, y) === equals(y, x)`를 만족해야 합니다.
+3. **추이적**: `A`인 모든 `x`, `y`, `z`에 대해 `equals(x, y) === true`이고 `equals(y, z) === true`라면 `equals(x, z) === true`를 만족해야 합니다.
 
-**Quiz**. Would a combinator `reverse: <A>(E: Eq<A>) => Eq<A>` make sense?
+**퀴즈**: 결합자 `reverse: <A>(E: Eq<A>) => Eq<A>`가 의미가 있을까요?
 
-**Quiz**. Would a combinator `not: <A>(E: Eq<A>) => Eq<A>` make sense?
+**퀴즈**: 결합자 `not: <A>(E: Eq<A>) => Eq<A>`가 의미가 있을까요?
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -893,9 +893,9 @@ export const not = <A>(E: Eq<A>): Eq<A> => ({
 })
 ```
 
-**Example**
+**예시**
 
-Let's see the first example of the usage of the `Eq` abstraction by defining a function `elem` that checks whether a given value is an element of `ReadonlyArray`.
+주어진 값이 `ReadonlyArray`의 요소인지 확인하는 `elem` 함수를 정의해 `Eq` 추상화를 사용하는 첫 번째 예시를 살펴보겠습니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -910,14 +910,14 @@ pipe([1, 2, 3], elem(N.Eq)(2), console.log) // => true
 pipe([1, 2, 3], elem(N.Eq)(4), console.log) // => false
 ```
 
-Why would we not use the native `includes` Array method?
+배열의 기본 메소드인 `includes`을 사용하지 않는 이유는 무엇일까요?
 
 ```ts
 console.log([1, 2, 3].includes(2)) // => true
 console.log([1, 2, 3].includes(4)) // => false
 ```
 
-Let's define some `Eq` instance for more complex types.
+좀 더 복잡한 타입을 위한 `Eq` 인스턴스를 정의해 보겠습니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -935,7 +935,7 @@ console.log(EqPoint.equals({ x: 1, y: 2 }, { x: 1, y: 2 })) // => true
 console.log(EqPoint.equals({ x: 1, y: 2 }, { x: 1, y: -2 })) // => false
 ```
 
-and check the results of `elem` and `includes`
+`elem` 함수와 `includes` 함수의 결과를 확인해 봅시다.
 
 ```ts
 const points: ReadonlyArray<Point> = [
@@ -950,13 +950,13 @@ console.log(points.includes(search)) // => false :(
 console.log(pipe(points, elem(EqPoint)(search))) // => true :)
 ```
 
-**Quiz** (JavaScript). Why does the `includes` method returns `false`?
+**퀴즈** (JavaScript): 왜 `includes` 메소드가 `false`를 반환할까요?
 
--> See the [answer here](src/quiz-answers/javascript-includes.md)
+-> [정답은 여기](src/quiz-answers/javascript-includes.md)에서 확인할 수 있습니다.
 
-Abstracting the concept of equality is of paramount importance, especially in a language like JavaScript where some data types do not offer handy APIs for checking user-defined equality.
+동등성의 개념을 추상화하는 것은 특히 일부 데이터 타입이 사용자 정의 동등을 확인하기 위한 편리한 API를 제공하지 않는 JavaScript와 같은 언어에서 가장 중요합니다.
 
-The JavaScript native `Set` datatype suffers by the same issue:
+JavaScript에 내장 되어있는 `Set` 데이터 타입은 같은 문제로 인해 어려움을 겪습니다.
 
 ```ts
 type Point = {
@@ -972,13 +972,13 @@ console.log(points)
 // => Set { { x: 0, y: 0 }, { x: 0, y: 0 } }
 ```
 
-Given the fact that `Set` uses `===` ("strict equality") for comparing values, `points` now contains **two identical copies** of `{ x: 0, y: 0 }`, a result we definitely did not want. Thus it is convenient to define a new API to add an element to a `Set`, one that leverages the `Eq` abstraction.
+`Set`이 값을 비교하기 위해 `===`("엄격한 동등")을 사용한다는 사실을 감안할 때 `points`에는 이제 `{ x: 0, y: 0 }`의 **두 개의 동일한 복사본**이 포함되며 우리는 이런 결과를 확실히 원하지 않았습니다. 따라서 `Eq` 추상화를 사용하는 `Set`에 요소를 추가하는 새 API를 정의하는 것이 편리합니다.
 
-**Quiz**. What would be the signature of this API?
+**퀴즈**: 이 API의 시그니처는 무엇일까요?
 
-Does `EqPoint` require too much boilerplate? The good news is that theory offers us yet again the possibility of implementing an `Eq` instance for a struct like `Point` if we are able to define an `Eq` instance for each of its fields.
+`EqPoint`에 너무 많은 보일러플레이트가 필요한가요? 좋은 소식은 각 필드에 대해 `Eq` 인스턴스를 정의할 수 있는 경우 `Point`와 같은 구조체에 대해 `Eq` 인스턴스를 구현할 가능성을 제공한다는 것입니다.
 
-Conveniently the `fp-ts/Eq` module exports a `struct` combinator:
+편리하게도 `fp-ts/Eq` 모듈은 `struct` 결합자를 사용할 수 있게합니다.
 
 ```ts
 import { Eq, struct } from 'fp-ts/Eq'
@@ -995,7 +995,7 @@ const EqPoint: Eq<Point> = struct({
 })
 ```
 
-**Note**. Like for Semigroup, we aren't limited to `struct`-like data types, we also have combinators for working with tuples: `tuple`
+**참고**: 세미그룹과 마찬가지로 `struct`와 같은 데이터 타입에 국한되지 않고 튜플 을 위한 결합자 `tuple`도 있습니다.
 
 ```ts
 import { Eq, tuple } from 'fp-ts/Eq'
@@ -1009,7 +1009,7 @@ console.log(EqPoint.equals([1, 2], [1, 2])) // => true
 console.log(EqPoint.equals([1, 2], [1, -2])) // => false
 ```
 
-There are other combinators exported by `fp-ts`, here we can see a combinator that allows us to derive an `Eq` instance for `ReadonlyArray`s.
+`fp-ts`에서 사용할 수 있는 다른 결합자가 있습니다. 여기에서 `ReadonlyArray`에 대한 `Eq` 인스턴스를 파생시킬 수 있는 결합자를 확인할 수 있습니다.
 
 ```ts
 import { Eq, tuple } from 'fp-ts/Eq'
@@ -1023,7 +1023,7 @@ const EqPoint: Eq<Point> = tuple(N.Eq, N.Eq)
 const EqPoints: Eq<ReadonlyArray<Point>> = RA.getEq(EqPoint)
 ```
 
-Similarly to Semigroups, it is possible to define more than one `Eq` instance for the same given type. Suppose we have modeled a `User` with the following type:
+세미그룹과 비슷하게 주어진 동일한 타입에 대해 하나 이상의 `Eq` 인스턴스를 정의할 수 있습니다. 다음 타입으로 `User`를 모델링했다고 가정해 봅시다.
 
 ```ts
 type User = {
@@ -1032,7 +1032,7 @@ type User = {
 }
 ```
 
-we can define a "standard" `Eq<User>` instance using the `struct` combinator:
+`struct` 결합자를 사용해 "표준" `Eq<User>` 인스턴스를 정의할 수 있습니다.
 
 ```ts
 import { Eq, struct } from 'fp-ts/Eq'
@@ -1050,18 +1050,18 @@ const EqStandard: Eq<User> = struct({
 })
 ```
 
-Several languages, even pure functional languages like Haskell, do not allow to have more than one `Eq` instance per data type. But we may have different contexts where the meaning of `User` equality might differ. One common context is where two `User`s are equal if their `id` field is equal.
+여러 언어, 심지어 Haskell과 같은 순수 함수형 언어도 데이터 타입당 하나 이상의 `Eq` 인스턴스를 허용하지 않습니다. 그러나 `User` 타입의 동등의 의미가 다를 수 있다는 다른 맥락이 있을 수 있습니다. 하나의 일반적인 맥락은 `id` 필드가 동일한 경우 두 `User`는 같습니다.
 
 ```ts
-/** two users are equal if their `id` fields are equal */
+/** `id` 필드가 동일한 경우 두 User는 같습니다. */
 const EqID: Eq<User> = {
   equals: (first, second) => N.Eq.equals(first.id, second.id)
 }
 ```
 
-Now that we made an abstract concept concrete by representing it as a data structure, we can programmatically manipulate `Eq` instances like we do with other data structures. Let's see an example.
+이제 데이터 구조로 표현하여 추상적인 개념을 구체적으로 만들었으므로 다른 데이터 구조와 마찬가지로 `Eq` 인스턴스를 프로그래밍 방식으로 다룰 수 있습니다. 예시를 확인해 보겠습니다.
 
-**Example**. Rather than manually defining `EqId` we can use the combinator `contramap`: given an instance `Eq<A>` and a function from `B` to `A`, we can derive an `Eq<B>`
+**예시**: `EqId`를 수동으로 정의하는 대신 `contramap` 결합자를 사용할 수 있습니다. 인스턴스 `Eq<A>`와 `B`에서 `A`로의 함수가 주어지면 `Eq<B>`를 파생시킬 수 있습니다.
 
 ```ts
 import { Eq, struct, contramap } from 'fp-ts/Eq'
@@ -1086,23 +1086,23 @@ const EqID: Eq<User> = pipe(
 
 console.log(
   EqStandard.equals({ id: 1, name: 'Giulio' }, { id: 1, name: 'Giulio Canti' })
-) // => false (because the `name` property differs)
+) // => false (`name` 속성이 다르기 때문에 거짓)
 
 console.log(
   EqID.equals({ id: 1, name: 'Giulio' }, { id: 1, name: 'Giulio Canti' })
-) // => true (even though the `name` property differs)
+) // => true (`name` 속성이 다르더라도 참)
 
 console.log(EqID.equals({ id: 1, name: 'Giulio' }, { id: 2, name: 'Giulio' }))
-// => false (even though the `name` property is equal)
+// => false (`name` 속성이 같더라도 거짓)
 ```
 
-**Quiz**. Given a data type `A`, is it possible to define a `Semigroup<Eq<A>>`? What could it represent?
+**퀴즈**: 데이터 타입 `A`가 주어지면 `Semigroup<Eq<A>>`를 정의할 수 있을까요? 그것은 무엇을 표현할 수 있나요?
 
-## Modeling ordering relations with `Ord`
+## `Ord`를 사용한 순서 관계 모델링
 
-In the previous chapter regarding `Eq` we were dealing with the concept of **equality**. In this one we'll deal with the concept of **ordering**.
+`Eq`에 대한 이전 장에서 **동등**의 개념을 다루었습니다. 여기서는 **순서**의 개념을 다루어 보겠습니다.
 
-The concept of a total order relation can be implemented in TypeScript as following:
+전순서 관계의 개념은 다음과 같이 TypeScript에서 구현할 수 있습니다.
 
 ```ts
 import { Eq } from 'fp-ts/lib/Eq'
@@ -1114,15 +1114,15 @@ interface Ord<A> extends Eq<A> {
 }
 ```
 
-Resulting in:
+다음과 같은 결과를 갖습니다.
 
-- `x < y` if and only if `compare(x, y) = -1`
-- `x = y` if and only if `compare(x, y) = 0`
-- `x > y` if and only if `compare(x, y) = 1`
+- `compare(x, y) = -1`인 경우 `x < y`
+- `compare(x, y) = 0`인 경우 `x = y`
+- `compare(x, y) = 1`인 경우 `x > y`
 
-**Example**
+**예시**
 
-Let's try to define an `Ord` instance for the type `number`:
+`number` 타입에 대한 `Ord` 인스턴스를 정의해 봅시다:
 
 ```ts
 import { Ord } from 'fp-ts/Ord'
@@ -1133,23 +1133,23 @@ const OrdNumber: Ord<number> = {
 }
 ```
 
-The following laws have to hold true:
+다음과 같은 법칙이 만족해야 합니다.
 
-1. **Reflexivity**: `compare(x, x) <= 0`, for every `x` in `A`
-2. **Antisymmetry**: if `compare(x, y) <= 0` and `compare(y, x) <= 0` then `x = y`, for every `x`, `y` in `A`
-3. **Transitivity**: if `compare(x, y) <= 0` and `compare(y, z) <= 0` then `compare(x, z) <= 0`, for every `x`, `y`, `z` in `A`
+1. **재귀성**: `A`인 모든 `x`에 대하여 `compare(x, x) <= 0`를 만족해야 합니다.
+2. **반대칭성**: `A`인 모든 `x`, `y`에 대하여 `compare(x, y) <= 0`이고 `compare(y, x) <= 0`라면 `x = y`입니다.
+3. **추이적**: `A`인 `x`, `y`, `z`에 대하여 `compare(x, y) <= 0`이고 `compare(y, z) <= 0`라면 `compare(x, z) <= 0`를 만족해야 합니다.
 
-`compare` has also to be compatible with the `equals` operation from `Eq`:
+`compare`는 `Eq`의 `equals` 연산과도 호환되어야 합니다.
 
-`compare(x, y) === 0` if and only if `equals(x, y) === true`, for every `x`, `y` in `A`
+`A`인 모든 `x`, `y`에 대해 `equals(x, y) === true`인 경우에 `compare(x, y) === 0`입니다.
 
-**Note**. `equals` can be derived from `compare` in the following way:
+**참고**: `equals`은 다음 처럼 `compare`에서 파생될 수 있습니다.
 
 ```ts
 equals: (first, second) => compare(first, second) === 0
 ```
 
-In fact the `fp-ts/Ord` module exports a handy helper `fromCompare` which allows us to define an `Ord` instance simply by supplying the `compare` function:
+사실 `fp-ts/Ord` 모듈에는 `compare` 함수를 전달해 `Ord` 인스턴스를 정의할 수 있는 편리한 `fromCompare`가 있습니다.
 
 ```ts
 import { Ord, fromCompare } from 'fp-ts/Ord'
@@ -1159,9 +1159,9 @@ const OrdNumber: Ord<number> = fromCompare((first, second) =>
 )
 ```
 
-**Quiz**. Is it possible to define an `Ord` instance for the game Rock-Paper-Scissor where `move1 <= move2` if `move2` beats `move1`?
+**퀴즈**: `move2`가 `move1`을 이길 경우 `move1 <= move2`인 가위바위보 게임에 대한 `Ord` 인스턴스를 정의할 수 있나요?
 
-Let's see a practical usage of an `Ord` instance by defining a `sort` function which orders the elements of a `ReadonlyArray`.
+`ReadonlyArray`의 요소를 정렬하는 `sort` 함수를 정의해 `Ord` 인스턴스의 실제 사용법을 살펴보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1175,9 +1175,9 @@ export const sort = <A>(O: Ord<A>) => (
 pipe([3, 1, 2], sort(N.Ord), console.log) // => [1, 2, 3]
 ```
 
-**Quiz** (JavaScript). Why does the implementation leverages the native Array `slice` method?
+**퀴즈** (JavaScript): 배열의 내장 메소드인 `slice`를 활용하는 이유는 무엇일까요?
 
-Let's see another `Ord` pratical usage by defining a `min` function that returns the smallest of two values:
+두 값 중 가장 작은 값을 반환하는 `min` 함수를 정의해 또 다른 `Ord`의 실용적인 사용법을 살펴보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1190,11 +1190,11 @@ const min = <A>(O: Ord<A>) => (second: A) => (first: A): A =>
 pipe(2, min(N.Ord)(1), console.log) // => 1
 ```
 
-## Dual Ordering
+## 이중 순서
 
-In the same way we could invert the `concat` operation to obtain the `dual semigroup` using the `reverse` combinator, we can invert the `compare` operation to get the dual ordering.
+`reverse` 결합자를 사용해 `이중 세미그룹`을 얻기 위해 `concat` 연산을 반전하는 것과 마찬가지로 이중 순서를 얻기 위해 `compare` 연산을 반전할 수 있습니다.
 
-Let's define the `reverse` combinator for `Ord`:
+`Ord`에 대한 `reverse` 결합자를 정의해 보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1205,7 +1205,7 @@ export const reverse = <A>(O: Ord<A>): Ord<A> =>
   fromCompare((first, second) => O.compare(second, first))
 ```
 
-A usage example for `reverse` is obtaining a `max` function from the `min` one:
+`reverse`의 사용 예시는 `min` 함수에서 `max` 함수를 얻는 것입니다.
 
 ```ts
 import { flow, pipe } from 'fp-ts/function'
@@ -1221,7 +1221,7 @@ const max = flow(reverse, min)
 pipe(2, max(N.Ord)(1), console.log) // => 2
 ```
 
-The **totality** of ordering (meaning that given any `x` and `y`, one of the two conditions needs to hold true: `x <= y` or `y <= z`) may appear obvious when speaking about numbers, but that's not always the case. Let's see a slightly more complex scenario:
+순서의 **전체성**(`x` 및 `y`가 주어졌을 때 `x <= y` 또는 `y <= z` 중 하나가 참이어야 함을 의미합니다)은 숫자에 대해서 얘기할 때 명백하게 나타날 수 있지만 항상 렇지는 않습니다. 약간 더 복잡한 경우를 살펴보겠습니다.
 
 ```ts
 type User = {
@@ -1230,11 +1230,11 @@ type User = {
 }
 ```
 
-It's not really clear when a `User` is "smaller or equal" than another `User`.
+`User`가 다른 `User`보다 "작거나 같은지"는 ​​명확하지 않습니다.
 
-How can we define an `Ord<User>` instance?
+`Ord<User>` 인스턴스를 어떻게 정의할 수 있을까요?
 
-That depends on the context, but a possible choice might be ordering `User`s by their age:
+상황에 따라 다르지만 가능한 선택은 `User`의 나이를 기준으로 정렬하는 것입니다.
 
 ```ts
 import * as N from 'fp-ts/number'
@@ -1250,7 +1250,7 @@ const byAge: Ord<User> = fromCompare((first, second) =>
 )
 ```
 
-Again we can get rid of some boilerplate using the `contramap` combinatorL given an `Ord<A>` instance and a function from `B` to `A`, it is possible to derive `Ord<B>`:
+다시 `Ord<A>` 인스턴스와 `B`에서 `A`로의 함수를 전달하는 `contramap` 결합자를 사용하여 일부 보일러플레이트를 제거할 수 있으며 `Ord<B>`를 파생시킬 수 있습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1268,7 +1268,7 @@ const byAge: Ord<User> = pipe(
 )
 ```
 
-We can get the youngest of two `User`s using the previously defined `min` function.
+앞서 정의한 `min` 함수를 사용하여 두 `User` 중 어린 사람을 얻을 수 있습니다.
 
 ```ts
 // const getYounger: (second: User) => (first: User) => User
@@ -1281,20 +1281,20 @@ pipe(
 ) // => { name: 'Giulio', age: 47 }
 ```
 
-**Quiz**. In the `fp-ts/ReadonlyMap` module the following API is exposed:
+**퀴즈**: `fp-ts/ReadonlyMap` 모듈에는 다음 API가 있습니다.
 
 ```ts
 /**
- * Get a sorted `ReadonlyArray` of the keys contained in a `ReadonlyMap`.
+ * `ReadonlyMap`의 키의 정렬된 `ReadonlyArray`를 가져옵니다.
  */
 declare const keys: <K>(
   O: Ord<K>
 ) => <A>(m: ReadonlyMap<K, A>) => ReadonlyArray<K>
 ```
 
-why does this API requires an instance for `Ord<K>`?
+이 API에 `Ord<K>`에 대한 인스턴스가 필요한 이유가 무엇일까요?
 
-Let's finally go back to the very first issue: defining two semigroups `SemigroupMin` and `SemigroupMax` for types different than `number`:
+마지막으로 맨 처음 문제인 `number`와 다른 타입에 대해 `SemigroupMin`과 `SemigroupMax`를 정의하는 첫 번째 문제로 돌아가 보겠습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -1308,7 +1308,7 @@ const SemigroupMax: Semigroup<number> = {
 }
 ```
 
-Now that we have the `Ord` abstraction we can do it:
+이제 `Ord` 추상화가 있으므로 다음과 같이 사용할 수 있습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1342,25 +1342,25 @@ console.log(
 ) // => { name: 'Guido', age: 50 }
 ```
 
-**Example**
+**예시**
 
-Let's recap all of this with one final example (adapted from [Fantas, Eel, and Specification 4: Semigroup](http://www.tomharding.me/2017/03/13/fantas-eel-and-specification-4/)).
+마지막 예시([Fantas, Eel, and Specification 4: Semigroup](http://www.tomharding.me/2017/03/13/fantas-eel-and-specification-4/)에서 인용)로 모든 것을 요약해 보겠습니다.
 
-Suppose we need to build a system where, in a database, there are records of customers implemented in the following way:
+데이터베이스에 다음과 같은 방식으로 구현된 고객 레코드가 있는 시스템을 구축해야 한다고 가정해 봅시다.
 
 ```ts
 interface Customer {
   readonly name: string
   readonly favouriteThings: ReadonlyArray<string>
-  readonly registeredAt: number // since epoch
-  readonly lastUpdatedAt: number // since epoch
+  readonly registeredAt: number // 예로부터
+  readonly lastUpdatedAt: number // 예로부터
   readonly hasMadePurchase: boolean
 }
 ```
 
-For some reason, there might be duplicate records for the same person.
+어떤 이유로 같은 사람에 대한 중복 기록이 있을 수 있습니다.
 
-We need a merging strategy. Well, that's Semigroup's bread and butter!
+병합 전략이 필요합니다. 음, 그것은 세미그룹의 역할입니다!
 
 ```ts
 import * as B from 'fp-ts/boolean'
@@ -1374,21 +1374,21 @@ import * as S from 'fp-ts/string'
 interface Customer {
   readonly name: string
   readonly favouriteThings: ReadonlyArray<string>
-  readonly registeredAt: number // since epoch
-  readonly lastUpdatedAt: number // since epoch
+  readonly registeredAt: number // 예로부터
+  readonly lastUpdatedAt: number // 예로부터
   readonly hasMadePurchase: boolean
 }
 
 const SemigroupCustomer: Semigroup<Customer> = struct({
-  // keep the longer name
+  // 더 긴 이름을 유지합니다.
   name: max(pipe(N.Ord, contramap(S.size))),
-  // accumulate things
+  // 값들을 축적합니다.
   favouriteThings: RA.getSemigroup<string>(),
-  // keep the least recent date
+  // 가장 최근 날짜를 유지합니다.
   registeredAt: min(N.Ord),
-  // keep the most recent date
+  // 가장 최근 날짜를 유지합니다.
   lastUpdatedAt: max(N.Ord),
-  // boolean semigroup under disjunction
+  // 논리합 기반의 불린 세미그룹을 사용합니다.
   hasMadePurchase: B.SemigroupAny
 })
 
@@ -1420,7 +1420,7 @@ console.log(
 */
 ```
 
-**Quiz**. Given a type `A` is it possible to define a `Semigroup<Ord<A>>` instance? What could it possibly represent?
+**퀴즈**: 타입 `A`가 주어지면 `Semigroup<Ord<A>>` 인스턴스를 정의할 수 있나요? 그것은 무엇을 표현할 수 있나요?
 
 **데모**
 

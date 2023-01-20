@@ -1,4 +1,4 @@
-## Question
+## 문제
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -24,15 +24,16 @@ console.log(points.includes(search)) // => false :(
 console.log(pipe(points, elem(EqPoint)(search))) // => true :)
 ```
 
-Why does the `includes` method returns `false`?
+왜 `includes` 메소드가 `false`를 반환할까요?
 
-## Answer
+## 정답
 
-The `includes` method compares by value in case of primitive values, and by reference in other cases.
+`includes` 메소드는 원시 값의 경우 값으로 비교하고 다른 경우에는 참조로 비교합니다.
 
-As [explained here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes), includes() uses the `sameValueZero` algorithm to determine whether the given element is found.
+자세한 [설명](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)은 여기를 확인하세요. includes()는 `sameValueZero` 알고리즘을 사용해 전달된 요소가 있는지 결정합니다.
 
-The `sameValueZero` algorithm is very close to the one used by `===` (see [details here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#same-value-zero_equality)) and objects are compared through their references instead of their values:
+`sameValueZero` 알고리즘은 `===`를 사용하는 것과 매우 비슷하며 객체는 값 대신 참조를 비교합니다. (자세한 내용은 [여기](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness#same-value-zero_equality)를 확인하세요.)
+
 
 ```ts
 console.log({ foo: 'bar' } === { foo: 'bar' }) // => false
