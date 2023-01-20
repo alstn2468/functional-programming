@@ -1424,6 +1424,8 @@ console.log(
 
 **데모**
 
+[`02_ord.ts`](src/02_ord.ts)
+
 # Modeling composition through Monoids
 
 Let's recap what we have seen till now.
