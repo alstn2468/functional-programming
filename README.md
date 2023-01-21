@@ -1426,38 +1426,38 @@ console.log(
 
 [`02_ord.ts`](src/02_ord.ts)
 
-# Modeling composition through Monoids
+# Monoid를 통한 합성 모델링
 
-Let's recap what we have seen till now.
+지금까지 본 것들을 요약해 보겠습니다.
 
-We have seen how an **algebra** is a combination of:
+우리는 **대수학**이 다음의 조합이라는 것을 보았습니다:
 
-- some type `A`
-- some operations involving the type `A`
-- some laws and properties for that combination.
+- 일부 타입 'A'
+- `A` 타입과 관련된 일부 연산
+- 해당 조합에 대한 일부 법칙 및 속성
 
-The first algebra we have seen has been the magma, an algebra defined on some type A equipped with one operation called `concat`. There were no laws involved in `Magma<A>` the only requirement we had was that the `concat` operation had to be _closed_ on `A` meaning that the result:
+우리가 본 첫 번째 대수는 `concat`이라는 하나의 연산을 갖춘 일부 타입 `A`에 정의된 대수인 마그마였습니다. `Magma<A>`와 관련된 법칙은 없었습니다. 유일한 요구 사항은 `concat` 연산이 `A`에서 *닫혀있어야* 한다는 것이었습니다. 즉, 결과는 다음과 같습니다.
 
 ```ts
 concat(first: A, second: A) => A
 ```
 
-has still to be an element of the `A` type.
+여전히 `A` 타입의 요소여야 합니다.
 
-Later on we have seen how adding one simple requirement, _associativity_, allowed some `Magma<A>` to be further refined as a `Semigroup<A>`, and how associativity captures the possibility of computations to be parallelized.
+나중에 우리는 하나의 간단한 요구 사항인 *결합법칙*을 추가해 일부 `Magma<A>`를 `Semigroup<A>`으로 추가 정제하는 방법과 결합법칙이 병렬화 가능한 계산을 포착하는 방법을 살펴보았습니다.
 
-Now we're going to add another condition on Semigroup.
+이제 세미그룹에 다른 조건을 추가하겠습니다.
 
-Given a `Semigroup` defined on some set `A` with some `concat` operation, if there is some element in `A` – we'll call this element _empty_ – such as for every element `a` in `A` the two following equations hold true:
+일부 `concat` 연산을 사용하여 일부 집합 `A`에 정의된 `Semigroup`이 주어지면 `A`에 특정 요소가 있는 경우 우리는 이 요소를 *empty*라고 부릅니다. 예를 들어 `A`의 모든 요소 `a`에 대해 다음 두 방정식이 참입니다.
 
-- **Right identity**: `concat(a, empty) = a`
-- **Left identity**: `concat(empty, a) = a`
+- **우 항등원**: `concat(a, empty) = a`
+- **좌 항등원**: `concat(empty, a) = a`
 
-then the `Semigroup` is also a `Monoid`.
+그러면 `Semigroup`도 `Monoid`입니다.
 
-**Note**: We'll call the `empty` element **unit** for the rest of this section. There's other synonyms in literature, some of the most common ones are _neutral element_ and _identity_element_.
+**참고**: 이 섹션의 나머지 부분에서는 `empty`요소를 **unit**이라고 합니다. 학문적으로 다른 동의어가 있으며 가장 일반적인 동의어 중 일부는 *neutral element* 및 *identity element*입니다.
 
-We have seen how in TypeScript `Magma`s and `Semigroup`s, can be modeled with `interface`s, so it should not come as a surprise that the very same can be done for `Monoid`s.
+우리는 `Magma`와 `Semigroup`이 TypeScript의 `interface`로 모델링되는 방법을 보았으므로 `Monoid`에 대해서도 똑같은 일을 할 수 있다는 것은 놀라운 일이 아닙니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -1467,18 +1467,18 @@ interface Monoid<A> extends Semigroup<A> {
 }
 ```
 
-Many of the semigroups we have seen in the previous sections can be extended to become `Monoid`s. All we need to find is some element of type `A` for which the Right and Left identities hold true.
+이전 섹션에서 본 많은 세미그룹은 `Monoid`가 되도록 확장할 수 있습니다. 우리가 찾아야 할 것은 우항등, 좌항등이 참인 `A` 타입의 일부 요소입니다.
 
 ```ts
 import { Monoid } from 'fp-ts/Monoid'
 
-/** number `Monoid` under addition */
+/** 덧셈 기반의 숫자 모노이드 */
 const MonoidSum: Monoid<number> = {
   concat: (first, second) => first + second,
   empty: 0
 }
 
-/** number `Monoid` under multiplication */
+/** 곱셈 기반의 숫자 모노이드 */
 const MonoidProduct: Monoid<number> = {
   concat: (first, second) => first * second,
   empty: 1
@@ -1489,20 +1489,20 @@ const MonoidString: Monoid<string> = {
   empty: ''
 }
 
-/** boolean monoid under conjunction */
+/** 논리곱 기반의 불린 모노이드 */
 const MonoidAll: Monoid<boolean> = {
   concat: (first, second) => first && second,
   empty: true
 }
 
-/** boolean monoid under disjunction */
+/** 논리합 기반의 불린 모노이드 */
 const MonoidAny: Monoid<boolean> = {
   concat: (first, second) => first || second,
   empty: false
 }
 ```
 
-**Quiz**. In the semigroup section we have seen how the type `ReadonlyArray<string>` admits a `Semigroup` instance:
+**퀴즈**: 세미그룹 섹션에서 `ReadonlyArray<string>` 타입이 `Semigroup` 인스턴스를 수용하는 방법을 살펴보았습니다.
 
 ```ts
 import { Semigroup } from 'fp-ts/Semigroup'
@@ -1512,13 +1512,13 @@ const Semigroup: Semigroup<ReadonlyArray<string>> = {
 }
 ```
 
-Can you find the `unit` for this semigroup? If so, can we generalize the result not just for `ReadonlyArray<string>` but `ReadonlyArray<A>` as well?
+이 세미그룹의 `unit`를 찾을 수 있나요? 그렇다면 `ReadonlyArray<string>`뿐만 아니라 `ReadonlyArray<A>`에 대해서도 결과를 일반화할 수 있나요?
 
-**Quiz** (more complex). Prove that given a monoid, there can only be one unit.
+**퀴즈** (더 복잡한): 모노이드가 주어지면 하나의 unit만 있을 수 있음을 증명해보세요.
 
-The consequence of the previous proof is that there can be only one unit per monoid, once we find one we can stop searching.
+이전 증명의 결과는 모노이드 당 하나의 unit만 있을 수 있다는 것입니다. 일단 하나를 찾으면 검색을 멈출 수 있습니다.
 
-We have seen how each semigroup was a magma, but not every magma was a semigroup. In the same way, each monoid is a semigroup, but not every semigroup is a monoid.
+우리는 각 세미그룹이 어떻게 마그마인지 살펴봤지만 모든 마그마가 세미그룹인 것은 아닙니다. 같은 방식으로 각 모노이드는 세미그룹이지만 모든 세미그룹이 모노이드는 아닙니다.
 
 <center>
 <img src="images/monoid.png" width="300" alt="Magma vs Semigroup vs Monoid" />
@@ -1526,7 +1526,7 @@ We have seen how each semigroup was a magma, but not every magma was a semigroup
 
 **Example**
 
-Let's consider the following example:
+다음 예시를 살펴보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -1540,22 +1540,22 @@ console.log(SemigroupIntercalate.concat('a', 'b')) // => 'a|b'
 console.log(SemigroupIntercalate.concat('a', '')) // => 'a|'
 ```
 
-Note how for this Semigroup there's no such `empty` value of type `string` such as `concat(a, empty) = a`.
+이 세미그룹에는 `concat(a, empty) = a`를 만족하는 `string` 타입의 `empty` 값이 없다는 점에 유의하십시오.
 
-And now one final, slightly more "exotic" example, involving functions:
+그리고 이제 함수를 포함하는 약간 더 "이국적인" 마지막 예입니다.
 
-**Example**
+**예시**
 
-An **endomorphism** is a function whose input and output type is the same:
+**자기 사상**은 입력 및 출력 타입이 동일한 함수입니다.
 
 ```ts
 type Endomorphism<A> = (a: A) => A
 ```
 
-Given a type `A`, all endomorphisms defined on `A` are a monoid, such as:
+`A` 타입이 주어지면 `A`에 정의된 모든 자기사상은 다음과 같은 모노이드입니다.
 
-- the `concat` operation is the usual function composition
-- the unit, our `empty` value is the identity function
+- `concat` 연산은 일반적인 함수 합성입니다.
+- unit, `empty` 값은 항등 함수입니다.
 
 ```ts
 import { Endomorphism, flow, identity } from 'fp-ts/function'
@@ -1567,17 +1567,17 @@ export const getEndomorphismMonoid = <A>(): Monoid<Endomorphism<A>> => ({
 })
 ```
 
-**Note**: The `identity` function has one, and only one possible implementation:
+**참고**: `identity` 함수에는 가능한 구현이 딱 하나 있습니다.
 
 ```ts
 const identity = (a: A) => a
 ```
 
-Whatever value we pass in input, it gives us the same value in output.
+입력으로 전달하는 값이 무엇이든 출력에서 ​​동일한 값을 제공합니다.
 
 <!--
 TODO:
-We can start having a small taste of the importance of the `identity` function. While apparently useless per se, this function is vital to define a monoid for functions, in this case, endomorphisms. In fact, _doing nothing_, being _empty_ or _neutral_ is a tremendously valuable property to have when it comes to composition and we can think of the `identity` function as the number `0` of functions.
+우리는 `항등` 함수의 중요성에 대해 맛보기할 수 있습니다. 그 자체로는 명백히 쓸모가 없지만, 이 함수는 함수(이 경우에는 자기 사상)에 대한 모노이드를 정의하는 데 필수적입니다. 사실 *아무것도 하지 않음*, *empty* 또는 *neutral*이라는 것은 합성에 있어서 대단히 귀중한 속성이며, `identity` 함수는 숫자 `0`의 기능이라고 생각할 수 있습니다.
 -->
 
 ## The `concatAll` function
