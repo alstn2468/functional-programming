@@ -1580,9 +1580,9 @@ TODO:
 우리는 `항등` 함수의 중요성에 대해 맛보기할 수 있습니다. 그 자체로는 명백히 쓸모가 없지만, 이 함수는 함수(이 경우에는 자기 사상)에 대한 모노이드를 정의하는 데 필수적입니다. 사실 *아무것도 하지 않음*, *empty* 또는 *neutral*이라는 것은 합성에 있어서 대단히 귀중한 속성이며, `identity` 함수는 숫자 `0`의 기능이라고 생각할 수 있습니다.
 -->
 
-## The `concatAll` function
+## `concatAll` 함수
 
-One great property of monoids, compared to semigrops, is that the concatenation of multiple elements becomes even easier: it is not necessary anymore to provide an initial value.
+세미그룹과 비교할 때 모노이드의 한 가지 큰 속성은 여러 요소의 연결이 훨씬 더 쉬워진다는 것입니다. 더 이상 초기 값을 제공할 필요가 없습니다.
 
 ```ts
 import { concatAll } from 'fp-ts/Monoid'
@@ -1597,11 +1597,11 @@ console.log(concatAll(B.MonoidAll)([true, false, true])) // => false
 console.log(concatAll(B.MonoidAny)([true, false, true])) // => true
 ```
 
-**Quiz**. Why is the initial value not needed anymore?
+**퀴즈**: 초기 값이 더 이상 필요하지 않은 이유가 무엇일까요?
 
-## Product monoid
+## 모노이드 활용하기
 
-As we have already seen with semigroups, it is possible to define a monoid instance for a `struct` if we are able to define a monoid instance for each of its fields.
+세미그룹과 동일하게 각 필드에 대한 모노이드 인스턴스를 정의할 수 있는 경우 `struct`를 이용해 모노이드 인스턴스를 정의할 수 있습니다.
 
 **Example**
 
@@ -1620,7 +1620,7 @@ const Monoid: Monoid<Point> = struct({
 })
 ```
 
-**Note**. There is a combinator similar to `struct` that works with tuples: `tuple`.
+**참고**: 튜플로 동작하는 `struct`와 유사한 결합자 `tuple`이 있습니다.
 
 ```ts
 import { Monoid, tuple } from 'fp-ts/Monoid'
@@ -1631,9 +1631,9 @@ type Point = readonly [number, number]
 const Monoid: Monoid<Point> = tuple(N.MonoidSum, N.MonoidSum)
 ```
 
-**Quiz**. Is it possible to define a "free monoid" for a generic type `A`?
+**퀴즈**: 제네릭 타입 `A`에 대한 "자유 모노이드"를 정의할 수 있을까요?
 
-**데모** (implementing a system to draw geoetric shapes on canvas)
+**데모** (캔버스에 기하학적 모양을 그리는 시스템 구현하기)
 
 [`03_shapes.ts`](src/03_shapes.ts)
 
