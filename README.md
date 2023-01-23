@@ -1603,7 +1603,7 @@ console.log(concatAll(B.MonoidAny)([true, false, true])) // => true
 
 세미그룹과 동일하게 각 필드에 대한 모노이드 인스턴스를 정의할 수 있는 경우 `struct`를 이용해 모노이드 인스턴스를 정의할 수 있습니다.
 
-**Example**
+**예시**
 
 ```ts
 import { Monoid, struct } from 'fp-ts/Monoid'
