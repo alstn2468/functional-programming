@@ -1,7 +1,7 @@
 /*
 
-  **Quiz**. Given a type `A` is it possible to define a semigroup instance
-  for `Ord<A>`. What could it represent?
+  **퀴즈**: 타입 `A` 주어지면 `Ord<A>`에 대한 세미그룹 인스턴스를 정의할 수 있나요?
+  그것은 무엇을 표현할 수 있나요?
 */
 
 import { pipe } from 'fp-ts/function'
@@ -14,7 +14,7 @@ import * as B from 'fp-ts/boolean'
 
 /*
 
-  first of all let's define a semigroup instance for `Ord<A>`
+  우선 `Ord<A>`에 대한 세미그룹 인스턴스를 정의하겠습니다.
 
 */
 
@@ -28,7 +28,7 @@ const getSemigroup = <A = never>(): Semigroup<O.Ord<A>> => ({
 
 /*
 
-  now let's see it applied to a practical example
+  이제 실제 사례에 적용해 보겠습니다.
 
 */
 
@@ -56,7 +56,7 @@ const byRememberMe = pipe(
 
 const SemigroupOrdUser = getSemigroup<User>()
 
-// represents a table to sort
+// 정렬할 테이블을 표현합니다.
 const users: ReadonlyArray<User> = [
   { id: 1, name: 'Guido', age: 47, rememberMe: false },
   { id: 2, name: 'Guido', age: 46, rememberMe: true },
@@ -64,8 +64,8 @@ const users: ReadonlyArray<User> = [
   { id: 4, name: 'Giulio', age: 44, rememberMe: true }
 ]
 
-// a classic ordering:
-// first by name, then by age, then by `rememberMe`
+// 일반적인 정렬:
+// 처음에는 이름으로, 그다음에는 나이로, 그다음에는 `rememberMe`
 
 const byNameAgeRememberMe = concatAll(SemigroupOrdUser)(byName)([
   byAge,
@@ -79,8 +79,7 @@ pipe(users, sort(byNameAgeRememberMe), console.log)
   { id: 1, name: 'Guido', age: 47, rememberMe: false } ]
 */
 
-// now I want all the users with
-// `rememberMe = true` first
+// 이제 `rememberMe = true`인 사용자가 앞 순서이길 원합니다.
 
 const byRememberMeNameAge = concatAll(SemigroupOrdUser)(
   O.reverse(byRememberMe)
