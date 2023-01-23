@@ -1540,9 +1540,9 @@ console.log(SemigroupIntercalate.concat('a', 'b')) // => 'a|b'
 console.log(SemigroupIntercalate.concat('a', '')) // => 'a|'
 ```
 
-이 세미그룹에는 `concat(a, empty) = a`를 만족하는 `string` 타입의 `empty` 값이 없다는 점에 유의하십시오.
+이 세미그룹에는 `concat(a, empty) = a`를 만족하는 `string` 타입의 `empty` 값이 없다는 점에 유의해야 합니다.
 
-그리고 이제 함수를 포함하는 약간 더 "이국적인" 마지막 예입니다.
+그리고 이제 함수를 포함하는 약간 더 "익숙하지 않은" 마지막 예시입니다.
 
 **예시**
 
