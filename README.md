@@ -1873,23 +1873,23 @@ TypeScript에서 `Option`을 정의할 수 있을까요? 다음 장에서 우리
 
 보다 친숙한 곱타입부터 시작하겠습니다.
 
-## Product types
+## 곱타입
 
-A product type is a collection of types T<sub>i</sub> indexed by a set `I`.
+곱타입은 집합 `I`로 인덱싱된 타입 T<sub>i</sub>의 모음입니다.
 
-Two members of this family are `n`-tuples, where `I` is an interval of natural numbers:
+곱타입의 하나는 `n`-튜플이며 여기서 `I`는 자연수의 간격입니다.
 
 ```ts
 type Tuple1 = [string] // I = [0]
 type Tuple2 = [string, number] // I = [0, 1]
 type Tuple3 = [string, number, boolean] // I = [0, 1, 2]
 
-// Accessing by index
+// 인덱스로 접근
 type Fst = Tuple2[0] // string
 type Snd = Tuple2[1] // number
 ```
 
-and structs, where `I` is a set of labels:
+다른 하나는 구조체며 여기서 `I`는 레이블 집합입니다.
 
 ```ts
 // I = {"name", "age"}
@@ -1898,40 +1898,40 @@ interface Person {
   age: number
 }
 
-// Accessing by label
+// 레이블로 접근
 type Name = Person['name'] // string
 type Age = Person['age'] // number
 ```
 
-Product types can be **polimorphic**.
+곱타입은 **다형성**일 수 있습니다.
 
-**Example**
+**예시**
 
 ```ts
-//                ↓ type parameter
+//                ↓ 타입 매개변수
 type HttpResponse<A> = {
   readonly code: number
   readonly body: A
 }
 ```
 
-### Why "product" types?
+### 왜 "곱"타입 인가요?
 
-If we label with `C(A)` the number of elements of type `A` (also called in mathematics, **cardinality**), then the following equation hold true:
+타입 `A`(수학에서는 **카디널리티**라고도 함)의 요소 수에 `C(A)` 레이블을 지정하면 다음 방정식이 성립합니다.
 
 ```ts
 C([A, B]) = C(A) * C(B)
 ```
 
-> the cardinality of a product is the product of the cardinalities
+> 곱타입의 카디널리티는 카디널리티의 곱입니다.
 
-**Example**
+**예시**
 
-The `null` type has cardinality `1` because it has only one member: `null`.
+`null` 타입은 하나의 맴버(`null`)만 있기 때문에 카디널리티 `1`을 갖습니다.
 
-**Quiz**: What is the cardinality of the `boolean` type.
+**퀴즈**: `boolean` 타입의 카디널리티는 무엇일까요?
 
-**Example**
+**예시**
 
 ```ts
 type Hour = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
@@ -1939,19 +1939,19 @@ type Period = 'AM' | 'PM'
 type Clock = [Hour, Period]
 ```
 
-Type `Hour` has 12 members.
-Type `Period` has 2 members.
-Thus type `Clock` has `12 * 2 = 24` elements.
+`Hour` 타입은 12개의 맴버를 갖습니다.
+`Period` 타입은 2개의 맴버를 갖습니다.
+그러므로 `Clock` 타입은 `12 * 2 = 24`개의 요소를 갖습니다.
 
-**Quiz**: What is the cardinality of the following `Clock` type?
+**퀴즈**: 다음 `Clock` 타입의 카디널리티는 무엇일까요?
 
 ```ts
-// same as before
+// 이전과 동일
 type Hour = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
-// same as before
+// 이전과 동일
 type Period = 'AM' | 'PM'
 
-// different encoding, no longer a Tuple
+// 다른 인코딩 방식으로 더 이상 튜플이 아닙니다.
 type Clock = {
   readonly hour: Hour
   readonly period: Period
