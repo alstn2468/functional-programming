@@ -2294,31 +2294,31 @@ declare function readFile(path: string): Promise<string>
 
 TypeScript와 같이 정적 타이핑을 사용할 때 Promise를 이용하는 방법의 몇 가지 단점을 찾을 수 있나요?
 
-## Functional error handling
+## 함수형 오류 처리
 
-Let's see how to handle errors in a functional way.
+함수형 방식으로 오류를 처리하는 방법을 살펴보겠습니다.
 
-A function that returns errors or throws exceptions is an example of a partial function.
+오류를 반환하거나 예외를 발생시키는 함수는 부분 함수의 예시입니다.
 
-In the previous chapters we have seen that every partial function `f` can always be brought back to a total one `f'`.
+이전 장에서 우리는 모든 부분 함수 `f`가 항상 전체 함수 `f'`로 되돌아갈 수 있음을 보았습니다.
 
 ```
 f': X ⟶ Option(Y)
 ```
 
-Now that we know a bit more about sum types in TypeScript we can define the `Option` without much issues.
+이제 TypeScript의 합타입에 대해 조금 더 알게 되었으므로 많은 문제 없이 `Option`을 정의할 수 있습니다.
 
-### The `Option` type
+### `Option` 타입
 
-The type `Option` represents the effect of a computation which may fail (case `None`) or return a type `A` (case `Some<A>`):
+`Option` 타입은 실패(`None`의 경우) 또는 `A` 타입(`Some<A>`의 경우)을 반환할 수 있는 계산의 효과를 표현합니다.
 
 ```ts
-// represents a failure
+// 실패를 표현합니다.
 interface None {
   readonly _tag: 'None'
 }
 
-// represents a success
+// 성공을 표현합니다.
 interface Some<A> {
   readonly _tag: 'Some'
   readonly value: A
@@ -2327,7 +2327,7 @@ interface Some<A> {
 type Option<A> = None | Some<A>
 ```
 
-Constructors and pattern matching:
+생성자와 패턴매칭은 다음과 같습니다.
 
 ```ts
 const none: Option<never> = { _tag: 'None' }
@@ -2346,10 +2346,10 @@ const match = <R, A>(onNone: () => R, onSome: (a: A) => R) => (
 }
 ```
 
-The `Option` type can be used to avoid throwing exceptions or representing the optional values, thus we can move from:
+`Option` 타입은 예외 발생을 피하거나 선택적 값을 나타내는 데 사용할 수 있으므로 다음 상황 이용할 수 있습니다.
 
 ```ts
-//                        this is a lie ↓
+//      A를 반환하는 것은 거짓말입니다. ↓
 const head = <A>(as: ReadonlyArray<A>): A => {
   if (as.length === 0) {
     throw new Error('Empty array')
@@ -2365,12 +2365,12 @@ try {
 }
 ```
 
-where the type system is ignorant about the possibility of failure, to:
+여기서 타입 시스템은 실패 가능성에 대해 알지 못합니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
 
-//                                      ↓ the type system "knows" that this computation may fail
+//                                      ↓ 타입 시스템은 이 계산이 실패할 수 있음을 "알고" 있습니다.
 const head = <A>(as: ReadonlyArray<A>): Option<A> =>
   as.length === 0 ? none : some(as[0])
 
@@ -2385,27 +2385,27 @@ const result = pipe(
 )
 ```
 
-where **the possibility of an error is encoded in the type system**.
+여기서 **오류 가능성은 타입 시스템에서 인코딩됩니다**.
 
-If we attempt to access the `value` property of an `Option` without checking in which case we are, the type system will warn us about the possibility of getting an error:
+어떤 경우인지 확인하지 않고 `Option`의 `value` 속성에 액세스하려고 하면 타입 시스템에서 오류가 발생할 가능성에 대해 경고합니다.
 
 ```ts
 declare const numbers: ReadonlyArray<number>
 
 const result = head(numbers)
-result.value // type checker error: Property 'value' does not exist on type 'Option<number>'
+result.value // type checker error: 'Option<number>' 타입에 'value' 속성이 없습니다.
 ```
 
-The only way to access the value contained in an `Option` is to handle also the failure case using the `match` function.
+`Option`에 포함된 값에 접근하는 유일한 방법은 `match` 함수를 사용하여 실패 사례도 처리하는 것입니다.
 
 ```ts
 pipe(result, match(
-  () => ...handle error...
-  (n) => ...go on with my business logic...
+  () => ...오류 처리...
+  (n) => ...비즈니스 로직으로 진행...
 ))
 ```
 
-Is it possible to define instances for the abstractions we've seen in the chapters before? Let's begin with `Eq`.
+이전 장에서 본 추상화에 대한 인스턴스를 정의하는 것이 가능한가요? `Eq`부터 시작하겠습니다.
 
 ### An `Eq` instance
 
