@@ -2054,11 +2054,11 @@ export type List<A> =
 - `ReadonlyMap<string, A>`
 - `ReadonlyMap<'k1' | 'k2', A>`
 
-### Constructors
+### 생성자
 
-A sum type with `n` elements needs at least `n` **constructors**, one for each member:
+`n` 요소가 있는 합타입에는 각 요소에 대해 최소한 하나씩 `n` **생성자**가 필요합니다.
 
-**Example** (redux action creators)
+**예시** (redux 액션 생성자)
 
 ```ts
 export type Action =
@@ -2099,14 +2099,14 @@ export const del = (id: number): Action => ({
 })
 ```
 
-**Example** (TypeScript, linked lists)
+**예시** (TypeScript, 연결리스트)
 
 ```ts
 export type List<A> =
   | { readonly _tag: 'Nil' }
   | { readonly _tag: 'Cons'; readonly head: A; readonly tail: List<A> }
 
-// a nullary constructor can be implemented as a constant
+// nil 생성자는 상수로 구현할 수 있습니다.
 export const nil: List<never> = { _tag: 'Nil' }
 
 export const cons = <A>(head: A, tail: List<A>): List<A> => ({
@@ -2115,7 +2115,7 @@ export const cons = <A>(head: A, tail: List<A>): List<A> => ({
   tail
 })
 
-// equivalent to an array containing [1, 2, 3]
+// [1, 2, 3]을 포함하는 배열과 동일합니다.
 const myList = cons(1, cons(2, cons(3, nil)))
 ```
 
