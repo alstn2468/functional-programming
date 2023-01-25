@@ -1637,38 +1637,38 @@ const Monoid: Monoid<Point> = tuple(N.MonoidSum, N.MonoidSum)
 
 [`03_shapes.ts`](src/03_shapes.ts)
 
-# Pure and partial functions
+# 순수 함수와 부분 함수
 
-In the first chapter we've seen an informal definition of a pure function:
+첫 번째 장에서 순수 함수의 비공식적 정의를 보았습니다.
 
-> A pure function is a procedure that given the same input always returns the same output and does not have any observable side effect.
+> 순수 함수는 같은 입력이 주어지면 부작용 없이 항상 같은 출력을 반환하는 관찰 가능한 프로시저입니다.
 
-Such an informal statement could leave space for some doubts, such as:
+이런 비공식적 설명은 다음과 같은 의심의 여지를 남길 수 있습니다.
 
-- what is a "side effect"?
-- what does it means "observable"?
-- what does it mean "same"?
+- "부작용"이란 무엇일까요?
+- "관찰 가능한"이란 무엇을 의미할까요?
+- "같은"이란 무엇을 의미할까요?
 
-Let's see a formal definition of the concept of a function.
+함수 개념의 공식적인 정의를 살펴보겠습니다.
 
-**Note**. If `X` and `Y` are sets, then with `X × Y` we indicate their _cartesian product_, meaning the set
+**참고**: `X`와 `Y`가 집합이면 `X × Y` 집합을 의미하는 *곱집합*을 의미합니다.
 
 ```
 X × Y = { (x, y) | x ∈ X, y ∈ Y }
 ```
 
-The following [definition](https://en.wikipedia.org/wiki/History_of_the_function_concept) was given a century ago:
+다음 [정의](https://en.wikipedia.org/wiki/History_of_the_function_concept)는 100년 전에 주어졌습니다.
 
-**Definition**. A \_function: `f: X ⟶ Y` is a subset of `X × Y` such as
-for every `x ∈ X` there's exactly one `y ∈ Y` such that `(x, y) ∈ f`.
+**정의**: 함수 `f: X ⟶ Y`는 다음과 같은 `X × Y`의 하위 집합입니다.
+모든 `x ∈ X`에 대해 `(x, y) ∈ f`와 같은 정확히 하나의 `y ∈ Y`가 있습니다.
 
-The set `X` is called the _domain_ of `f`, `Y` is it's _codomain_.
+집합 `X`는 `f`의 *정의역*이라고 하고, `Y`는 그것의 *공역*입니다.
 
-**Example**
+**예시**
 
-The function `double: Nat ⟶ Nat` is the subset of the cartesian product `Nat × Nat` given by `{ (1, 2), (2, 4), (3, 6), ...}`.
+함수 `double: Nat ⟶ Nat`은 `{ (1, 2), (2, 4), (3, 6), ...}`가 주어진 곱집합 `Nat × Nat`의 부분 집합입니다.
 
-In TypeScript we could define `f` as
+TypeScript에서 `f`를 다음과 같이 정의할 수 있습니다.
 
 ```ts
 const f: Record<number, number> = {
@@ -1681,26 +1681,26 @@ const f: Record<number, number> = {
 
 <!--
 TODO:
-Please note that the set `f` has to be described _statically_ when defining the function (meaning that the elements of that set cannot change with time for no reason).
-In this way we can exclude any form of side effect and the return value is always the same.
+함수를 정의할 때 집합 `f`는 *정적으로* 설명되어야 합니다. (해당 집합의 요소는 시간에 따라 아무 이유 없이 변경될 수 없음을 의미합니다)
+이러한 방식으로 모든 형태의 부작용을 배제할 수 있으며 반환 값은 항상 동일합니다.
 -->
 
-The one in the example is called an _extensional_ definition of a function, meaning we enumerate one by one each of the elements of its domain and for each one of them we point the corresponding codomain element.
+예제에 있는 것은 함수의 _확장_ 정의라고 합니다. 즉, 정의역의 각 요소를 하나씩 열거하고 각 요소에 대해 해당 공역 요소를 가리킵니다.
 
-Naturally, when such a set is infinite this proves to be problematic. We can't list the entire domain and codomain of all functions.
+당연히 이러한 집합이 무한대일 때 이것은 문제가 있는 것으로 판명됩니다. 모든 함수의 전체 정의역과 공동 치역을 나열할 수 없습니다.
 
-We can get around this issue by introducing the one that is called _intensional_ definition, meaning that we express a condition that has to hold for every couple `(x, y) ∈ f` meaning `y = x * 2`.
+우리는 `y = x * 2`를 의미하는 모든 쌍 `(x, y) ∈ f`에 대해 유지해야 하는 조건을 표현하는 _의도적_ 정의를 도입하여 이 문제를 해결할 수 있습니다
 
-This the familiar form in which we write the `double` function and its definition in TypeScript:
+이것은 TypeScript에서 `double` 함수와 함수의 정의를 작성하는 친숙한 형식입니다.
 
 ```ts
 const double = (x: number): number => x * 2
 ```
 
-The definition of a function as a subset of a cartesian product shows how in mathematics every function is pure: there is no action, no state mutation or elements being modified.
-In functional programming the implementation of functions has to follow as much as possible this ideal model.
+함수를 곱집합의 하위 집합으로 정의하면 수학에서 모든 함수가 순수하다는 것을 알 수 있습니다. 함수에는 동작이나 상태 변경, 수정되는 요소가 없습니다.
+함수형 프로그래밍에서 함수의 구현은 가능한 한 이러한 이상적인 모델을 따라야 합니다.
 
-**Quiz**. Which of the following procedures are pure functions?
+**퀴즈**: 다음 프로시저 중 순수 함수는 무엇입니까?
 
 ```ts
 const coefficient1 = 2
@@ -1748,17 +1748,17 @@ export const f7 = (
 ): void => fs.readFile(path, { encoding: 'utf8' }, callback)
 ```
 
-The fact that a function is pure does not imply automatically a ban on local mutability as long as it doesn't leaks out of its scope.
+함수가 순수하다는 것이 범위를 벗어나지 않는 한 자동으로 지역적인 변경을 금지하는 것은 아닙니다.
 
-![mutable / immutable](images/mutable-immutable.jpg)
+![변성 / 불변성](images/mutable-immutable.jpg)
 
-**Example** (Implementazion details of the `concatAll` function for monoids)
+**예시** (모노이드에 대한 `concatAll` 함수의 세부 구현 사항)
 
 ```ts
 import { Monoid } from 'fp-ts/Monoid'
 
 const concatAll = <A>(M: Monoid<A>) => (as: ReadonlyArray<A>): A => {
-  let out: A = M.empty // <= local mutability
+  let out: A = M.empty // <= 지역적 변경
   for (const a of as) {
     out = M.concat(out, a)
   }
@@ -1766,63 +1766,63 @@ const concatAll = <A>(M: Monoid<A>) => (as: ReadonlyArray<A>): A => {
 }
 ```
 
-The ultimate goal is to guarantee: **referential transparency**.
+궁극적인 목표는 **참조 투명성**을 보장하는 것입니다.
 
-The contract we sign with a user of our APIs is defined by the APIs signature:
+API를 사용하는 사용자는 참조 투명성을 존중한다는 약속을 기반으로 API의 시그니처를 보고 사용합니다.
 
 ```ts
 declare const concatAll: <A>(M: Monoid<A>) => (as: ReadonlyArray<A>) => A
 ```
 
-and by the promise of respecting referential transparency. The technical details of how the function is implemented are not relevant, thus there is maximum freedom implementation-wise.
+함수 구현 방법에 대한 기술적 세부 사항은 관련이 없으므로 구현 측면에서 최대한의 자유가 있습니다.
 
-Thus, how do we define a "side effect"? Simply by negating referential transparency:
+따라서 단순히 참조 투명성을 부정함으로써 "부작용"을 정의할 수 있을까요?
 
-> An expression contains "side effects" if it doesn't benefit from referential transparency
+> 참조 투명성의 이점을 얻지 못하는 경우 식에 "부작용"이 포함됩니다.
 
-Not only functions are a perfect example of one of the two pillars of functional programming, referential transparency, but they're also examples of the second pillar: **composition**.
+함수는 함수형 프로그래밍의 두 기둥 중 하나인 참조 투명성의 완벽한 예시일 뿐만 아니라 두 번째 기둥인 **합성**의 예시이기도 합니다.
 
-Functions compose:
+함수 합성
 
-**Definition**. Given `f: Y ⟶ Z` and `g: X ⟶ Y` two functions, then the function `h: X ⟶ Z` defined by:
+**정의**: `f: Y ⟶ Z`와 `g: X ⟶ Y` 두 함수가 주어지면 함수 `h: X ⟶ Z`는 다음과 같이 정의됩니다.
 
 ```
 h(x) = f(g(x))
 ```
 
-is called _composition_ of `f` and `g` and is written `h = f ∘ g`
+`f`와 `g`의 *합성*이라 하고 `h = f ∘ g`으로 씁니다.
 
-Please note that in order for `f` and `g` to combine, the domain of `f` has to be included in the codomain of `g`.
+`f`와 `g`가 결합하려면 `f`의 정의역이 `g`의 공역에 포함되어야 합니다.
 
-**Definition**. A function is said to be _partial_ if it is not defined for each value of its domain.
+**정의**: 정의역의 각 값에 대해 정의되지 않은 함수는 *부분 함수*라고 합니다.
 
-Vice versa, a function defined for all values of its domain is said to be _total_
+반대로 정의역의 모든 값에 대해 정의된 함수를 *전역 함수*라고 합니다.
 
-**Example**
+**예시**
 
 ```
 f(x) = 1 / x
 ```
 
-The function `f: number ⟶ number` is not defined for `x = 0`.
+이 `f: number ⟶ number` 함수는 `x = 0`에 대해 정의되지 않습니다.
 
-**Example**
+**예시**
 
 ```ts
-// Get the first element of a `ReadonlyArray`
+// `ReadonlyArray`의 첫 번째 요소를 반환합니다.
 declare const head: <A>(as: ReadonlyArray<A>) => A
 ```
 
-**Quiz**. Why is the `head` function partial?
+**퀴즈**: `head` 함수가 부분 함수인 이유가 무엇인가요?
 
-**Quiz**. Is `JSON.parse` a total function?
+**퀴즈**: `JSON.parse` 함수는 전역 함수인가요?
 
 ```ts
 parse: (text: string, reviver?: (this: any, key: string, value: any) => any) =>
   any
 ```
 
-**Quiz**. Is `JSON.stringify` a total function?
+**퀴즈**: `JSON.stringify` 함수는 전역 함수인가요?
 
 ```ts
 stringify: (
@@ -1832,23 +1832,23 @@ stringify: (
 ) => string
 ```
 
-In functional programming there is a tendency to only define **pure and total functions**. From now on with the term function we'll be specifically referring to "pure and total function". So what do we do when we have a partial function in our applications?
+함수형 프로그래밍에서는 **순수한 전체 함수**만 정의하는 경향이 있습니다. 이제부터는 함수라는 용어로 "순수한 전체 함수"를 구체적으로 언급할 것입니다. 그렇다면 애플리케이션에 부분 함수가 있을 때 어떻게 해야 할까요?
 
-A partial function `f: X ⟶ Y` can always be "brought back" to a total one by adding a special value, let's call it `None`, to the codomain and by assigning it to the output of `f` for every value of `X` where the function is not defined.
+부분 함수 `f: X ⟶ Y`에 정의되지 않은 `X`에 공역으로 `None`이라는 특별한 값을 추가해 모든 경우에 `f`의 출력에 할당함으로써 항상 전체 함수로 "되돌아올" 수 있습니다.
 
 ```
 f': X ⟶ Y ∪ None
 ```
 
-Let's call it `Option(Y) = Y ∪ None`.
+`Option(Y) = Y ∪ None`이라고 부르겠습니다.
 
 ```
 f': X ⟶ Option(Y)
 ```
 
-In functional programming the tendency is to define only pure and and total functions.
+함수형 프로그래밍에서는 순수한 전체 함수만 정의하는 경향이 있습니다.
 
-Is it possible to define `Option` in TypeScript? In the following chapters we'll see how to do it.
+TypeScript에서 `Option`을 정의할 수 있을까요? 다음 장에서 우리는 그것을 정의하는 방법을 살펴 볼 것입니다.
 
 # Algebraic Data Types
 
