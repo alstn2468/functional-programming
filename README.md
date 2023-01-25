@@ -1968,29 +1968,29 @@ type Clock = [Hour, Period]
 
 여기서 `Hour`와 `Period`는 독립적입니다. `Hour` 값은 `Period` 값을 변경하지 않습니다. `[Hour, Period]`의 모든 쌍은 "이치에" 맞고 올바릅니다.
 
-## Sum types
+## 합타입
 
-A sum type is a a data type that can hold a value of different (but limited) types. Only one of these types can be used in a single instance and there is generally a "tag" value differentiating those types.
+합타입은 다양한지만 제한된 타입의 값을 가질 수 있는 데이터 타입입니다. 이런 타입 중 하나만 단일 인스턴스에서 사용할 수 있으며 일반적으로 타입을 구분하는 "태그" 값이 있습니다.
 
-In TypeScript's official docs they are called [discriminated union](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html).
+TypeScript의 공식 문서에서는 [Discriminated Union](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html)이라고 합니다.
 
-It is important to note that the members of the union have to be **disjoint**, there can't be values that belong to more than one member.
+합집합의 요소는 **분리**되어 있어야 하며 둘 이상의 요소에 속하는 값이 있을 수 없다는 점에 유의하는 것이 중요합니다.
 
-**Example**
+**예시**
 
-The type:
+타입:
 
 ```ts
 type StringsOrNumbers = ReadonlyArray<string> | ReadonlyArray<number>
 
 declare const sn: StringsOrNumbers
 
-sn.map() // error: This expression is not callable.
+sn.map() // error: 이 표현식은 호출할 수 없습니다.
 ```
 
-is not a disjoint union because the value `[]`, the empty array, belongs to both members.
+빈 배열 `[]`이 두 멤버 모두에 속하기 때문에 위의 예시는 분리합집합이 아닙니다.
 
-**Quiz**. Is the following union disjoint?
+**퀴즈**: 다음 합집합은 분리되어 있나요?
 
 ```ts
 type Member1 = { readonly a: string }
@@ -1998,15 +1998,15 @@ type Member2 = { readonly b: number }
 type MyUnion = Member1 | Member2
 ```
 
-Disjoint unions are recurring in functional programming.
+분리 합집합은 함수형 프로그래밍에서 재귀됩니다.
 
-Fortunately `TypeScript` has a way to guarantee that a union is disjoint: add a specific field that works as a **tag**.
+다행스럽게도 `TypeScript`에는 합집합이 분리되도록 보장하는 **태그**로 작동하는 특정 필드를 추가하는 방법이 있습니다.
 
-**Note**: Disjoint unions, sum types and tagged unions are used interchangeably to indicate the same thing.
+**참고**: 분리합집합, 합타입 및 Tagged Union는 같은 것을 표현하기 위해 상호 교환적으로 사용됩니다.
 
-**Example** (redux actions)
+**예시** (redux 액션)
 
-The `Action` sum type models a portion of the operation that the user can take i a [todo app](https://todomvc.com/).
+`Action` 합타입은 [todo 앱](https://todomvc.com/)에서 사용자가 수행할 수 있는 동작 일부를 모델링합니다.
 
 ```ts
 type Action =
@@ -2026,27 +2026,27 @@ type Action =
     }
 ```
 
-The `type` tag makes sure every member of the union is disjointed.
+`type` 태그는 합집합의 모든 요소가 분리되어 있음을 확인시켜 줍니다.
 
-**Note**. The name of the field that acts as a tag is chosen by the developer. It doesn't have to be "type". In `fp-ts` the convention is to use a `_tag` field.
+**참고**: 태그 역할을 하는 필드의 이름은 개발자가 선택할 수 있으며 "type"일 필요는 없습니다. `fp-ts`에서는 `_tag` 필드를 사용하는 것을 관례로 합니다.
 
-Now that we've seen few examples we can define more explicitly what algebraic data types are:
+이제 몇 가지 예시를 보았으므로 대수적 자료형이 무엇인지 더 명시적으로 정의할 수 있습니다.
 
-> In general, an algebraic data type specifies a sum of one or more alternatives, where each alternative is a product of zero or more fields.
+> 일반적으로 대수적 자료형은 하나 이상의 선택가능한 항목의 합계를 지정하며 각 선택가능한 항목은 0개 이상의 필드의 곱입니다.
 
-Sum types can be **polymorphic** and **recursive**.
+합타입은 **다형성**일 수 있으며 **재귀적**일 수도 있습니다.
 
-**Example** (linked list)
+**예시** (연결리스트)
 
 ```ts
-//               ↓ type parameter
+//               ↓ 타입 매개변수
 export type List<A> =
   | { readonly _tag: 'Nil' }
   | { readonly _tag: 'Cons'; readonly head: A; readonly tail: List<A> }
-//                                                              ↑ recursion
+//                                                              ↑ 재귀
 ```
 
-**Quiz** (TypeScript). Which of the following data types is a product or a sum type?
+**Quiz** (TypeScript): 다음 데이터 타입 중 곱타입 또는 합타입은 무엇인가요?
 
 - `ReadonlyArray<A>`
 - `Record<string, A>`
@@ -2054,11 +2054,11 @@ export type List<A> =
 - `ReadonlyMap<string, A>`
 - `ReadonlyMap<'k1' | 'k2', A>`
 
-### Constructors
+### 생성자
 
-A sum type with `n` elements needs at least `n` **constructors**, one for each member:
+`n` 요소가 있는 합타입에는 각 요소에 대해 최소한 하나씩 `n` **생성자**가 필요합니다.
 
-**Example** (redux action creators)
+**예시** (redux 액션 생성자)
 
 ```ts
 export type Action =
@@ -2099,14 +2099,14 @@ export const del = (id: number): Action => ({
 })
 ```
 
-**Example** (TypeScript, linked lists)
+**예시** (TypeScript, 연결리스트)
 
 ```ts
 export type List<A> =
   | { readonly _tag: 'Nil' }
   | { readonly _tag: 'Cons'; readonly head: A; readonly tail: List<A> }
 
-// a nullary constructor can be implemented as a constant
+// nil 생성자는 상수로 구현할 수 있습니다.
 export const nil: List<never> = { _tag: 'Nil' }
 
 export const cons = <A>(head: A, tail: List<A>): List<A> => ({
@@ -2115,15 +2115,15 @@ export const cons = <A>(head: A, tail: List<A>): List<A> => ({
   tail
 })
 
-// equivalent to an array containing [1, 2, 3]
+// [1, 2, 3]을 포함하는 배열과 동일합니다.
 const myList = cons(1, cons(2, cons(3, nil)))
 ```
 
-### Pattern matching
+### 패턴 매칭
 
-JavaScript doesn't support [pattern matching](https://github.com/tc39/proposal-pattern-matching) (neither does TypeScript) but we can simulate it with a `match` function.
+JavaScript는 [패턴 매칭](https://github.com/tc39/proposal-pattern-matching)(TypeScript도 지원하지 않음)을 지원하지 않지만 `match` 함수로 흉내낼 수 있습니다.
 
-**Example** (TypeScript, linked lists)
+**예시** (TypeScript, 연결리스트)
 
 ```ts
 interface Nil {
@@ -2150,42 +2150,42 @@ export const match = <R, A>(
   }
 }
 
-// returns `true` if the list is empty
+// 리스트가 비어 있으면 `true`를 반환합니다.
 export const isEmpty = match(
   () => true,
   () => false
 )
 
-// returns the first element of the list or `undefined`
+// 리스트의 첫 번째 요소 또는 `undefined`을 반환합니다.
 export const head = match(
   () => undefined,
   (head, _tail) => head
 )
 
-// returns the length of the list, recursively
+// 재귀적으로 리스트의 길이를 반환합니다.
 export const length: <A>(fa: List<A>) => number = match(
   () => 0,
   (_, tail) => 1 + length(tail)
 )
 ```
 
-**Quiz**. Why's the `head` API sub optimal?
+**퀴즈**: `head` API가 완벽하지 않은 이유는 무엇일까요?
 
--> See the [answer here](src/quiz-answers/pattern-matching.md)
+-> [정답은 여기](src/quiz-answers/pattern-matching.md)에서 확인할 수 있습니다.
 
-**Note**. TypeScript offers a great feature for sum types: **exhaustive check**. The type checker can _check_, no pun intended, whether all the possible cases are handled by the `switch` defined in the body of the function.
+**참고**: TypeScript는 합타입에 대하여 훌륭한 **철저한 검사** 기능을 제공합니다. 타입 검사기는 모든 가능한 경우가 함수 본문에 정의된 `switch`에 의해 처리되는지 여부를 *확인*할 수 있습니다.
 
-### Why "sum" types?
+### 왜 "합"타입 인가요?
 
-Because the following identity holds true:
+다음 방정식이 참이기 때문입니다.
 
 ```ts
 C(A | B) = C(A) + C(B)
 ```
 
-> The sum of the cardinality is the sum of the cardinalities
+> 카디널리티의 합은 카디널리티의 합입니다.
 
-**Example** (the `Option` type)
+**예시** (`Option` 타입)
 
 ```ts
 interface None {
@@ -2200,13 +2200,13 @@ interface Some<A> {
 type Option<A> = None | Some<A>
 ```
 
-From the general formula `C(Option<A>) = 1 + C(A)` we can derive the cardinality of the `Option<boolean>` type: `1 + 2 = 3` members.
+일반식 `C(Option<A>) = 1 + C(A)`에서 `Option<boolean>`타입의 카디널리티인 `1 + 2 = 3`을 파생할 수 있습니다.
 
-### When should I use a sum type?
+### 합타입은 언제 사용할 수 있을까요?
 
-When the components would be **dependent** if implemented with a product type.
+곱타입으로 구현된 경우 구성 요소가 **종속**되는 경우 합타입을 사용할 수 있습니다.
 
-**Example** (`React` props)
+**예시** (`React` props)
 
 ```ts
 import * as React from 'react'
@@ -2219,7 +2219,7 @@ interface Props {
 class Textbox extends React.Component<Props> {
   render() {
     if (this.props.editable) {
-      // error: Cannot invoke an object which is possibly 'undefined' :(
+      // error: `undefined` 가능성이 있는 객체를 호출할 수 없습니다. :(
       this.props.onChange('a')
     }
     return <div />
@@ -2227,9 +2227,9 @@ class Textbox extends React.Component<Props> {
 }
 ```
 
-The problem here is that `Props` is modeled like a product, but `onChange` **depends** on `editable`.
+여기서 문제는 `Props`가 곱처럼 모델링되지만 `onChange`는 `editable`에 **의존**한다는 것입니다.
 
-A sum type fits the use case better:
+합타입이 위 사례에 더 적합합니다.
 
 ```ts
 import * as React from 'react'
@@ -2254,7 +2254,7 @@ class Textbox extends React.Component<Props> {
 }
 ```
 
-**Example** (node callbacks)
+**예시** (node 콜백)
 
 ```ts
 declare function readFile(
@@ -2264,13 +2264,13 @@ declare function readFile(
 ): void
 ```
 
-The result of the `readFile` operation is modeled like a product type (to be more precise, as a tuple) which is later on passed to the `callback` function:
+`readFile` 작업의 결과는 나중에 `callback` 함수에 전달되는 곱타입(더 정확하게는 튜플)처럼 모델링됩니다.
 
 ```ts
 type CallbackArgs = [Error | undefined, string | undefined]
 ```
 
-the callback components though are **dependent**: we either get an `Error` **or** a `string`:
+하지만 콜백의 구성 요소는 **종속적**입니다. `Error` **또는** `string`을 얻을 수 있습니다.
 
 | err         | data        | legal? |
 | ----------- | ----------- | ------ |
@@ -2279,20 +2279,20 @@ the callback components though are **dependent**: we either get an `Error` **or*
 | `Error`     | `string`    | ✘      |
 | `undefined` | `undefined` | ✘      |
 
-This API is clearly not modeled on the following premise:
+이 API는 분명히 다음 전제에서 모델링되지 않았습니다.
 
-> Make impossible state unrepresentable
+> 불가능한 상태를 표현할 수 없게 만들어야 합니다.
 
-A sum type would've been a better choice, but which sum type?
-We'll see how to handle errors in a functional way.
+합타입이 더 나은 선택이었을 것입니다. 하지만 어떤 합타입을 선택해야 할까요?
+함수형 방식으로 오류를 처리하는 방법을 살펴보겠습니다.
 
-**Quiz**. Recently API's based on callbacks have been largely replaced by their `Promise` equivalents.
+**퀴즈**: 최근 콜백을 기반으로 하는 API는 대부분 `Promise`로 대체되었습니다.
 
 ```ts
 declare function readFile(path: string): Promise<string>
 ```
 
-Can you find some cons of the Promise solution when using static typing like in TypeScript?
+TypeScript와 같이 정적 타이핑을 사용할 때 Promise를 이용하는 방법의 몇 가지 단점을 찾을 수 있나요?
 
 ## Functional error handling
 
