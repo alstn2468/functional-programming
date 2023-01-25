@@ -2119,11 +2119,11 @@ export const cons = <A>(head: A, tail: List<A>): List<A> => ({
 const myList = cons(1, cons(2, cons(3, nil)))
 ```
 
-### Pattern matching
+### 패턴 매칭
 
-JavaScript doesn't support [pattern matching](https://github.com/tc39/proposal-pattern-matching) (neither does TypeScript) but we can simulate it with a `match` function.
+JavaScript는 [패턴 매칭](https://github.com/tc39/proposal-pattern-matching)(TypeScript도 지원하지 않음)을 지원하지 않지만 `match` 함수로 흉내낼 수 있습니다.
 
-**Example** (TypeScript, linked lists)
+**예시** (TypeScript, 연결리스트)
 
 ```ts
 interface Nil {
@@ -2150,30 +2150,30 @@ export const match = <R, A>(
   }
 }
 
-// returns `true` if the list is empty
+// 리스트가 비어 있으면 `true`를 반환합니다.
 export const isEmpty = match(
   () => true,
   () => false
 )
 
-// returns the first element of the list or `undefined`
+// 리스트의 첫 번째 요소 또는 `undefined`을 반환합니다.
 export const head = match(
   () => undefined,
   (head, _tail) => head
 )
 
-// returns the length of the list, recursively
+// 재귀적으로 리스트의 길이를 반환합니다.
 export const length: <A>(fa: List<A>) => number = match(
   () => 0,
   (_, tail) => 1 + length(tail)
 )
 ```
 
-**Quiz**. Why's the `head` API sub optimal?
+**퀴즈**: `head` API가 완벽하지 않은 이유는 무엇일까요?
 
--> See the [answer here](src/quiz-answers/pattern-matching.md)
+-> [정답은 여기](src/quiz-answers/pattern-matching.md)에서 확인할 수 있습니다.
 
-**Note**. TypeScript offers a great feature for sum types: **exhaustive check**. The type checker can _check_, no pun intended, whether all the possible cases are handled by the `switch` defined in the body of the function.
+**참고**: TypeScript는 합타입에 대하여 훌륭한 **철저한 검사** 기능을 제공합니다. 타입 검사기는 모든 가능한 경우가 함수 본문에 정의된 `switch`에 의해 처리되는지 여부를 *확인*할 수 있습니다.
 
 ### Why "sum" types?
 

@@ -1,4 +1,4 @@
-## Question
+## 문제
 
 ```ts
 interface Nil {
@@ -31,10 +31,10 @@ export const head = match(
 )
 ```
 
-Why's the `head` API sub optimal?
+`head` API가 완벽하지 않은 이유는 무엇일까요?
 
-## Answer
+## 정답
 
-The issue with `head` here is, its codomain (return type) can be either the type of List element `A` (in `List<A>`) or `undefined`. Working with this return type can be challenging and increase the possibility of introducing bugs. If we can always return the same type, then we don't need to write 2 separate pieces of code to handle two different possible return types from head function.
- 
-In fact, we always implement a `match` function to return the same type (unlike in this example). You will learn how to have `A` (in `List<A>`) and `undefined` modeled under the one type later in this tutorial.
+여기서 `head`의 문제는 공역(반환 유형)이 `A`(`List<A>`에서) 또는 `undefined`의 유형일 수 있다는 것입니다. 이 반환 타입으로 작업하는 것은 어려울 수 있으며 버그가 발생할 가능성이 높아집니다. 항상 같은 타입을 반환할 수 있다면 head 함수에서 가능한 두 가지 반환 타입을 처리하기 위해 두 개의 개별 코드를 작성할 필요가 없습니다.
+
+사실, 우리는 이 예제와 다르게 항상 `match` 함수를 구현하여 동일한 타입을 반환합니다. 이 튜토리얼의 뒷부분에서 `A`(`List<A>`에서)와 `undefined`를 하나의 타입으로 모델링하는 방법을 배우게 됩니다.
