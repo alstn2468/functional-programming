@@ -1958,15 +1958,15 @@ type Clock = {
 }
 ```
 
-### When can I use a product type?
+### 곱타입은 언제 사용할 수 있을까요?
 
-Each time it's components are **independent**.
+곱타입은 구성 요소가 **독립적**일 때마다 사용할 수 있습니다.
 
 ```ts
 type Clock = [Hour, Period]
 ```
 
-Here `Hour` and `Period` are independent: the value of `Hour` does not change the value of `Period`. Every legal pair of `[Hour, Period]` makes "sense" and is legal.
+여기서 `Hour`와 `Period`는 독립적입니다. `Hour` 값은 `Period` 값을 변경하지 않습니다. `[Hour, Period]`의 모든 쌍은 "이치에" 맞고 올바릅니다.
 
 ## Sum types
 
