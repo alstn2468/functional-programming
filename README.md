@@ -1850,28 +1850,28 @@ f': X ⟶ Option(Y)
 
 TypeScript에서 `Option`을 정의할 수 있을까요? 다음 장에서 우리는 그것을 정의하는 방법을 살펴 볼 것입니다.
 
-# Algebraic Data Types
+# 대수적 자료형
 
-A good first step when writing an application or feature is to define it's domain model. TypeScript offers many tools that help accomplishing this task. **Algebraic Data Types** (in short, ADTs) are one of these tools.
+프로그램이나 기능을 작성할 때 좋은 첫 번째 단계는 도메인 모델을 정의하는 것입니다. TypeScript는 이 작업을 수행하는 데 도움이 되는 많은 도구를 제공합니다. **대수적 자료형**(줄여서 ADT)은 이러한 도구 중 하나입니다.
 
 <!--
-  What are the other tools?
+  다른 도구는 무엇이 있을까요?
 -->
 
-## What is an ADT?
+## ADT란 무엇인가요?
 
-> In computer programming, especially functional programming and type theory, an algebraic data type is a kind of composite type, i.e., **a type formed by combining other types**.
+> 컴퓨터 프로그래밍, 특히 함수형 프로그래밍 및 타입 이론에서 대수적 자료형은 일종의 합성 타입, 즉 **다른 타입을 결합해 형성된 타입**입니다.
 
-Two common families of algebraic data types are:
+대수적 자료형의 두 가지 일반적인 종류는 다음과 같습니다.
 
-- **product types**
-- **sum types**
+- **곱타입**
+- **합타입**
 
 <center>
 <img src="images/adt.png" width="400" alt="ADT" />
 </center>
 
-Let's begin with the more familiar ones: product types.
+보다 친숙한 곱타입부터 시작하겠습니다.
 
 ## Product types
 
