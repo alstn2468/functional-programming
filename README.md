@@ -2175,17 +2175,17 @@ export const length: <A>(fa: List<A>) => number = match(
 
 **참고**: TypeScript는 합타입에 대하여 훌륭한 **철저한 검사** 기능을 제공합니다. 타입 검사기는 모든 가능한 경우가 함수 본문에 정의된 `switch`에 의해 처리되는지 여부를 *확인*할 수 있습니다.
 
-### Why "sum" types?
+### 왜 "합"타입 인가요?
 
-Because the following identity holds true:
+다음 방정식이 참이기 때문입니다.
 
 ```ts
 C(A | B) = C(A) + C(B)
 ```
 
-> The sum of the cardinality is the sum of the cardinalities
+> 카디널리티의 합은 카디널리티의 합입니다.
 
-**Example** (the `Option` type)
+**예시** (`Option` 타입)
 
 ```ts
 interface None {
@@ -2200,7 +2200,7 @@ interface Some<A> {
 type Option<A> = None | Some<A>
 ```
 
-From the general formula `C(Option<A>) = 1 + C(A)` we can derive the cardinality of the `Option<boolean>` type: `1 + 2 = 3` members.
+일반식 `C(Option<A>) = 1 + C(A)`에서 `Option<boolean>`타입의 카디널리티인 `1 + 2 = 3`을 파생할 수 있습니다.
 
 ### When should I use a sum type?
 
