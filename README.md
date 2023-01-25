@@ -1968,29 +1968,29 @@ type Clock = [Hour, Period]
 
 여기서 `Hour`와 `Period`는 독립적입니다. `Hour` 값은 `Period` 값을 변경하지 않습니다. `[Hour, Period]`의 모든 쌍은 "이치에" 맞고 올바릅니다.
 
-## Sum types
+## 합타입
 
-A sum type is a a data type that can hold a value of different (but limited) types. Only one of these types can be used in a single instance and there is generally a "tag" value differentiating those types.
+합타입은 다양한지만 제한된 타입의 값을 가질 수 있는 데이터 타입입니다. 이런 타입 중 하나만 단일 인스턴스에서 사용할 수 있으며 일반적으로 타입을 구분하는 "태그" 값이 있습니다.
 
-In TypeScript's official docs they are called [discriminated union](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html).
+TypeScript의 공식 문서에서는 [Discriminated Union](https://www.typescriptlang.org/docs/handbook/unions-and-intersections.html)이라고 합니다.
 
-It is important to note that the members of the union have to be **disjoint**, there can't be values that belong to more than one member.
+합집합의 요소는 **분리**되어 있어야 하며 둘 이상의 요소에 속하는 값이 있을 수 없다는 점에 유의하는 것이 중요합니다.
 
-**Example**
+**예시**
 
-The type:
+타입:
 
 ```ts
 type StringsOrNumbers = ReadonlyArray<string> | ReadonlyArray<number>
 
 declare const sn: StringsOrNumbers
 
-sn.map() // error: This expression is not callable.
+sn.map() // error: 이 표현식은 호출할 수 없습니다.
 ```
 
-is not a disjoint union because the value `[]`, the empty array, belongs to both members.
+빈 배열 `[]`이 두 멤버 모두에 속하기 때문에 위의 예시는 분리합집합이 아닙니다.
 
-**Quiz**. Is the following union disjoint?
+**퀴즈**: 다음 합집합은 분리되어 있나요?
 
 ```ts
 type Member1 = { readonly a: string }
@@ -1998,15 +1998,15 @@ type Member2 = { readonly b: number }
 type MyUnion = Member1 | Member2
 ```
 
-Disjoint unions are recurring in functional programming.
+분리 합집합은 함수형 프로그래밍에서 재귀됩니다.
 
-Fortunately `TypeScript` has a way to guarantee that a union is disjoint: add a specific field that works as a **tag**.
+다행스럽게도 `TypeScript`에는 합집합이 분리되도록 보장하는 **태그**로 작동하는 특정 필드를 추가하는 방법이 있습니다.
 
-**Note**: Disjoint unions, sum types and tagged unions are used interchangeably to indicate the same thing.
+**참고**: 분리합집합, 합타입 및 Tagged Union는 같은 것을 표현하기 위해 상호 교환적으로 사용됩니다.
 
-**Example** (redux actions)
+**예시** (redux 액션)
 
-The `Action` sum type models a portion of the operation that the user can take i a [todo app](https://todomvc.com/).
+`Action` 합타입은 [todo 앱](https://todomvc.com/)에서 사용자가 수행할 수 있는 동작 일부를 모델링합니다.
 
 ```ts
 type Action =
@@ -2026,27 +2026,27 @@ type Action =
     }
 ```
 
-The `type` tag makes sure every member of the union is disjointed.
+`type` 태그는 합집합의 모든 요소가 분리되어 있음을 확인시켜 줍니다.
 
-**Note**. The name of the field that acts as a tag is chosen by the developer. It doesn't have to be "type". In `fp-ts` the convention is to use a `_tag` field.
+**참고**: 태그 역할을 하는 필드의 이름은 개발자가 선택할 수 있으며 "type"일 필요는 없습니다. `fp-ts`에서는 `_tag` 필드를 사용하는 것을 관례로 합니다.
 
-Now that we've seen few examples we can define more explicitly what algebraic data types are:
+이제 몇 가지 예시를 보았으므로 대수적 자료형이 무엇인지 더 명시적으로 정의할 수 있습니다.
 
-> In general, an algebraic data type specifies a sum of one or more alternatives, where each alternative is a product of zero or more fields.
+> 일반적으로 대수적 자료형은 하나 이상의 선택가능한 항목의 합계를 지정하며 각 선택가능한 항목은 0개 이상의 필드의 곱입니다.
 
-Sum types can be **polymorphic** and **recursive**.
+합타입은 **다형성**일 수 있으며 **재귀적**일 수도 있습니다.
 
-**Example** (linked list)
+**예시** (연결리스트)
 
 ```ts
-//               ↓ type parameter
+//               ↓ 타입 매개변수
 export type List<A> =
   | { readonly _tag: 'Nil' }
   | { readonly _tag: 'Cons'; readonly head: A; readonly tail: List<A> }
-//                                                              ↑ recursion
+//                                                              ↑ 재귀
 ```
 
-**Quiz** (TypeScript). Which of the following data types is a product or a sum type?
+**Quiz** (TypeScript): 다음 데이터 타입 중 곱타입 또는 합타입은 무엇인가요?
 
 - `ReadonlyArray<A>`
 - `Record<string, A>`
