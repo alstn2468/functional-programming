@@ -1,6 +1,6 @@
-## Question
+## 문제
 
-It is possible to define a monoid instance for `Option<A>` that behaves like that:
+다음과 같이 동작하는 `Option<A>`에 대한 모노이드 인스턴스를 정의할 수 있습니다.
 
 | x        | y        | concat(x, y)           |
 | -------- | -------- | ---------------------- |
@@ -10,17 +10,17 @@ It is possible to define a monoid instance for `Option<A>` that behaves like tha
 | some(a1) | some(a2) | some(S.concat(a1, a2)) |
 
 ```ts
-// the implementation is left as an exercise for the reader
+// 구현은 독자의 연습 문제로 남겨둡니다.
 declare const getMonoid: <A>(S: Semigroup<A>) => Monoid<Option<A>>
 ```
 
-What is the `empty` member for the monoid?
+위 모노이드의 `empty` 요소는 무엇인가요?
 
-## Answer
+## 정답
 
-`none` is the empty member for our monoid because with it, all the Monoid laws are true. Let's check the monoid laws on our new monoid:
+`none`은 모든 모노이드의 법칙이 참이기 때문에 모노이드의 empty 요소입니다. 새로운 모노이드에 대한 모노이드 법칙을 확인해 봅시다.
 
-**associative**
+**결합법칙**
 ```ts
 concat(none, concat(none, concat(none))) === concat(concat(none, none), none)
 concat(none, concat(none, concat(some(z)))) === concat(concat(none, none), some(z))
@@ -31,12 +31,12 @@ concat(some(x), concat(none, concat(none))) === concat(concat(some(x), none), no
 concat(some(x), concat(some(y), concat(some(z)))) === concat(concat(some(x), some(y)), some(z))
 ```
 
-**right identity**
+**우항등**
 ```ts
 concat(some(x), none) === some(x)
 ```
 
-**left identity**
+**좌항등**
 ```ts
 concat(none, some(x)) === some(x)
 ```

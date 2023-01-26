@@ -2542,9 +2542,9 @@ console.log(OrdOptionMyTuple.compare(o1, o2)) // => -1
 console.log(OrdOptionMyTuple.compare(o1, o3)) // => -1
 ```
 
-### `Semigroup` and `Monoid` instances
+### `Semigroup`과 `Monoid` 인스턴스
 
-Now, let's suppose we want to "merge" two different `Option<A>`s,: there are four different cases:
+이제 서로 다른 두 가지 `Option<A>`를 "병합"하고 싶다고 가정해 보겠습니다. 네 가지 경우가 있습니다.
 
 | x       | y       | concat(x, y) |
 | ------- | ------- | ------------ |
@@ -2553,29 +2553,29 @@ Now, let's suppose we want to "merge" two different `Option<A>`s,: there are fou
 | none    | some(a) | none         |
 | some(a) | some(b) | ?            |
 
-There's an issue in the last case, we need a recipe to "merge" two different `A`s.
+마지막 경우에 문제가 있습니다. 서로 다른 두 `A`를 "병합"하는 방법이 필요합니다.
 
-If only we had such a recipe..Isn't that the job our old good friends `Semigroup`s!?
+우리에게 이런 레시피가 있다면..그건 우리의 오랜 친구 `Semigroup`이 하는 일이 아닐까요!?
 
 | x        | y        | concat(x, y)           |
 | -------- | -------- | ---------------------- |
 | some(a1) | some(a2) | some(S.concat(a1, a2)) |
 
-All we need to do is to require the user to provide a `Semigroup` instance for `A` and then derive a `Semigroup` instance for `Option<A>`.
+우리가 해야 할 일은 사용자에게 `A`에 대한 `Semigroup` 인스턴스를 제공하도록 요구한 다음 `Option<A>`에 대한 `Semigroup` 인스턴스를 파생시키는 것입니다.
 
 ```ts
-// the implementation is left as an exercise for the reader
+// 구현은 독자의 연습 문제로 남겨둡니다.
 declare const getApplySemigroup: <A>(S: Semigroup<A>) => Semigroup<Option<A>>
 ```
 
-**Quiz**. Is it possible to add a neutral element to the previous semigroup to make it a monoid?
+**퀴즈**: 모노이드로 만들기 위해 이전 세미그룹에 비어있는 요소를 추가할 수 있습니까?
 
 ```ts
-// the implementation is left as an exercise for the reader
+// 구현은 독자의 연습 문제로 남겨둡니다.
 declare const getApplicativeMonoid: <A>(M: Monoid<A>) => Monoid<Option<A>>
 ```
 
-It is possible to define a monoid instance for `Option<A>` that behaves like that:
+다음과 같이 동작하는 `Option<A>`에 대한 모노이드 인스턴스를 정의할 수 있습니다.
 
 | x        | y        | concat(x, y)           |
 | -------- | -------- | ---------------------- |
@@ -2585,19 +2585,19 @@ It is possible to define a monoid instance for `Option<A>` that behaves like tha
 | some(a1) | some(a2) | some(S.concat(a1, a2)) |
 
 ```ts
-// the implementation is left as an exercise for the reader
+// 구현은 독자의 연습 문제로 남겨둡니다.
 declare const getMonoid: <A>(S: Semigroup<A>) => Monoid<Option<A>>
 ```
 
-**Quiz**. What is the `empty` member for the monoid?
+**퀴즈**: 위 모노이드의 `empty` 요소는 무엇인가요?
 
--> See the [answer here](src/quiz-answers/option-semigroup-monoid-second.md)
+-> [정답은 여기](src/quiz-answers/option-semigroup-monoid-second.md)에서 확인할 수 있습니다.
 
-**Example**
+**예시**
 
-Using `getMonoid` we can derive another two useful monoids:
+`getMonoid`를 사용하여 또 다른 두 가지 유용한 모노이드를 파생시킬 수 있습니다.
 
-(Monoid returning the left-most non-`None` value)
+(`None`이 아닌 가장 왼쪽 값을 반환하는 Monoid)
 
 | x        | y        | concat(x, y) |
 | -------- | -------- | ------------ |
@@ -2615,9 +2615,9 @@ export const getFirstMonoid = <A = never>(): Monoid<Option<A>> =>
   getMonoid(first())
 ```
 
-and its dual:
+그리고 반대의 것도 만들 수 있습니다.
 
-(Monoid returning the right-most non-`None` value)
+(`None`이 아닌 가장 오른쪽 값을 반환하는 Monoid)
 
 | x        | y        | concat(x, y) |
 | -------- | -------- | ------------ |
@@ -2635,22 +2635,22 @@ export const getLastMonoid = <A = never>(): Monoid<Option<A>> =>
   getMonoid(last())
 ```
 
-**Example**
+**예시**
 
-`getLastMonoid` can be useful to manage optional values. Let's seen an example where we want to derive user settings for a text editor, in this case VSCode.
+`getLastMonoid`는 선택적 값을 관리하는 데 유용할 수 있습니다. 텍스트 편집기(이 경우 VSCode)에 대한 사용자 설정을 파생시키려는 예시를 살펴보겠습니다.
 
 ```ts
 import { Monoid, struct } from 'fp-ts/Monoid'
 import { getMonoid, none, Option, some } from 'fp-ts/Option'
 import { last } from 'fp-ts/Semigroup'
 
-/** VSCode settings */
+/** VSCode 설정 */
 interface Settings {
-  /** Controls the font family */
+  /** 폰트 종류를 제어합니다. */
   readonly fontFamily: Option<string>
-  /** Controls the font size in pixels */
+  /** 폰트 크기 픽셀 값을 제어합니다. */
   readonly fontSize: Option<number>
-  /** Limit the width of the minimap to render at most a certain number of columns. */
+  /** 최대 특정 수의 열을 렌더링하도록 미니맵의 너비를 제한합니다. */
   readonly maxColumn: Option<number>
 }
 
@@ -2672,7 +2672,7 @@ const userSettings: Settings = {
   maxColumn: none
 }
 
-/** userSettings overrides workspaceSettings */
+/** userSettings는 workspaceSettings를 오버라이드합니다. */
 console.log(monoidSettings.concat(workspaceSettings, userSettings))
 /*
 { fontFamily: some("Fira Code"),
@@ -2681,7 +2681,7 @@ console.log(monoidSettings.concat(workspaceSettings, userSettings))
 */
 ```
 
-**Quiz**. Suppose VSCode cannot manage more than `80` columns per row, how could we modify the definition of `monoidSettings` to take that into account?
+**퀴즈**: VSCode가 행당 `80`개 이상의 열을 관리할 수 없다고 가정하면 이를 고려하여 `monoidSettings`의 정의를 어떻게 수정할 수 있나요?
 
 ### The `Either` type
 
