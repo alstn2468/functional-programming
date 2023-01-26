@@ -2683,22 +2683,22 @@ console.log(monoidSettings.concat(workspaceSettings, userSettings))
 
 **퀴즈**: VSCode가 행당 `80`개 이상의 열을 관리할 수 없다고 가정하면 이를 고려하여 `monoidSettings`의 정의를 어떻게 수정할 수 있나요?
 
-### The `Either` type
+### `Either` 타입
 
-We have seen how the `Option` data type can be used to handle partial functions, which often represent computations than can fail or throw exceptions.
+실패하거나 예외를 던질 수 있는 계산을 나타내는 경우가 많은 부분 함수를 처리하기 위해 `Option` 데이터 타입을 사용하는 방법을 살펴보았습니다.
 
-This data type might be limiting in some use cases tho. While in the case of success we get `Some<A>` which contains information of type `A`, the other member, `None` does not carry any data. We know it failed, but we don't know the reason.
+이 데이터 타입은 일부 사례에서는 제한적일 수 있습니다. 성공의 경우 `A` 타입의 정보를 포함하는 `Some<A>`를 얻는 반면 실패를 표현하는 `None`은 데이터를 전달하지 않습니다. 실패했다는 것은 알지만 그 이유는 모릅니다.
 
-In order to fix this we simply need to another data type to represent failure, we'll call it `Left<E>`. We'll also replace the `Some<A>` type with the `Right<A>`.
+이 문제를 해결하려면 실패를 나타내는 다른 데이터 타입이 필요합니다. 이것을 `Left<E>`라고 합니다. 또한 `Some<A>` 타입을 `Right<A>`로 대체합니다.
 
 ```ts
-// represents a failure
+// 실패을 표현합니다.
 interface Left<E> {
   readonly _tag: 'Left'
   readonly left: E
 }
 
-// represents a success
+// 성공을 표현합니다.
 interface Right<A> {
   readonly _tag: 'Right'
   readonly right: A
@@ -2707,7 +2707,7 @@ interface Right<A> {
 type Either<E, A> = Left<E> | Right<A>
 ```
 
-Constructors and pattern matching:
+생성자와 패턴매칭은 다음과 같습니다.
 
 ```ts
 const left = <E, A>(left: E): Either<E, A> => ({ _tag: 'Left', left })
@@ -2726,7 +2726,7 @@ const match = <E, R, A>(onLeft: (left: E) => R, onRight: (right: A) => R) => (
 }
 ```
 
-Let's get back to the previous callback example:
+이전 콜백 예시로 돌아가 보겠습니다.
 
 ```ts
 declare function readFile(
@@ -2741,14 +2741,14 @@ readFile('./myfile', (err, data) => {
   } else if (data !== undefined) {
     message = `Data: ${data.trim()}`
   } else {
-    // should never happen
+    // 절대 발생해서는 안됩니다.
     message = 'The impossible happened'
   }
   console.log(message)
 })
 ```
 
-we can change it's signature to:
+시그니처를 다음과 같이 변경할 수 있습니다.
 
 ```ts
 declare function readFile(
@@ -2757,7 +2757,7 @@ declare function readFile(
 ): void
 ```
 
-and consume the API in such way:
+다음과 같은 방식으로 API를 사용합니다.
 
 ```ts
 readFile('./myfile', (e) =>
