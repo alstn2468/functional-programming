@@ -2848,29 +2848,29 @@ double: (n: number) => number
 - 제네릭 **프로그래밍 언어**에 대한 모델
 - **합성** 개념의 모델
 
-## Definition
+## 정의
 
-The definition of a category, even though it isn't really complex, is a bit long, thus I'll split it in two parts:
+범주의 정의는 실제로 복잡하지는 않지만 약간 길기 때문에 두 부분으로 나누겠습니다.
 
-- the first is merely technical (we need to define its constituents)
-- the second one will be more relevant to what we care for: a notion of composition
+- 첫 번째는 단지 기술적인 것입니다. (합성요소를 정의해야 합니다)
+- 두 번째는 우리가 신경 쓰는 것과 더 관련이 있는 구성의 개념입니다.
 
-### Part I (Constituents)
+### Part I (합성요소)
 
-A category is a pair of `(Objects, Morphisms)` where:
+카테고리는 `(Objects, Morphisms)` 쌍입니다. 여기서
 
-- `Objects` is a collection of **objects**
-- `Morphisms` is a collection of **morphisms** (also called "arrows") between objects
+- `Objects`는 **객체**의 모음입니다.
+- `Morphisms`은 객체 간의 **사상**("화살표"라고도 함) 모음입니다.
 
-**Note**. The term "object" has nothing to do with the concept of "objects" in programming. Just think about those "objects" as black boxes we can't inspect, or simple placeholders useful to define the various morphisms.
+**참고**: "객체"라는 용어는 프로그래밍에서 "객체"라는 개념과 아무 관련이 없습니다. 이러한 "객체"를 우리가 검사할 수 없는 블랙 박스 또는 다양한 사상을 정의하는 데 유용한 간단한 플레이스홀더로 생각하십시오.
 
-Every morphism `f` owns a source object `A` and a target object `B`.
+모든 사상 `f`는 원천 객체 `A`와 대상 객체 `B`를 소유합니다.
 
-In every morphism, both `A` and `B` are members of `Objects`. We write `f: A ⟼ B` and we say that "f is a morphism from A to B".
+모든 사상에서 `A`와 `B`는 모두 `Objects`의 구성원입니다. 우리는 `f: A ⟼ B`라고 쓰고 "f는 A에서 B로의 사상"이라고 말합니다.
 
 <img src="images/morphism.png" width="300" alt="A morphism" />
 
-**Note**. For simplicity, from now on, I'll use labels only for objects, skipping the circles.
+**참고**: 간단히 하기 위해 지금부터는 원을 건너뛰고 객체에만 레이블을 사용하겠습니다.
 
 ### Part II (Composition)
 
