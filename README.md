@@ -2407,9 +2407,9 @@ pipe(result, match(
 
 이전 장에서 본 추상화에 대한 인스턴스를 정의하는 것이 가능한가요? `Eq`부터 시작하겠습니다.
 
-### An `Eq` instance
+### `Eq` 인스턴스
 
-Suppose we have two values of type `Option<string>` and that we want to compare them to check if their equal:
+`Option<string>` 타입의 두 값이 있고 두 값이 같은지 확인하기 위해 비교한다고 가정해 봅시다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -2440,18 +2440,18 @@ const result: boolean = pipe(
           // onNone o2
           () => false,
           // onSome o2
-          (s2) => s1 === s2 // <= qui uso l'uguaglianza tra stringhe
+          (s2) => s1 === s2 // <= 여기서 문자열 동등을 이용합니다.
         )
       )
   )
 )
 ```
 
-What if we had two values of type `Option<number>`? It would be pretty annoying to write the same code we just wrote above, the only difference afterall would be how we compare the two values contained in the `Option`.
+`Option<number>` 타입의 값이 두 개 있으면 어떻게 될까요? 방금 위에서 작성한 것과 동일한 코드를 작성하는 것은 매우 귀찮을 것입니다. 결국 차이점은 `Option`에 포함된 두 값을 비교하는 것입니다.
 
-Thus we can generalize the necessary code by requiring the user to provide an `Eq` instance for `A` and then derive an `Eq` instance for `Option<A>`.
+따라서 사용자에게 `A`에 대한 `Eq` 인스턴스를 제공한 다음 `Option<A>`에 대한 `Eq` 인스턴스를 파생하도록 요구하여 필요한 코드를 일반화할 수 있습니다.
 
-In other words we can define a **combinator** `getEq`: given an `Eq<A>` this combinator will return an `Eq<Option<A>>`:
+즉, **결합자** `getEq`를 정의할 수 있습니다. `Eq<A>`가 주어지면 이 연결자는 `Eq<Option<A>>`를 반환합니다.
 
 ```ts
 import { Eq } from 'fp-ts/Eq'
@@ -2476,7 +2476,7 @@ export const getEq = <A>(E: Eq<A>): Eq<Option<A>> => ({
             second,
             match(
               () => false,
-              (a2) => E.equals(a1, a2) // <= here I use the `A` equality
+              (a2) => E.equals(a1, a2) // <= 여기서는 `A`의 동등을 사용합니다.
             )
           )
       )
@@ -2494,11 +2494,9 @@ console.log(EqOptionString.equals(some('a'), some('b'))) // => false
 console.log(EqOptionString.equals(some('a'), some('a'))) // => true
 ```
 
-The best thing about being able to define an `Eq` instance for a type `Option<A>` is being able to leverage all of the combiners we've seen previously for `Eq`.
+`Option<A>` 타입에 대해 `Eq` 인스턴스를 정의할 수 있다는 점에서 가장 좋은 점은 이전에 본 모든 `Eq`에 대한 결합자를 활용할 수 있다는 것입니다.
 
-**Example**:
-
-An `Eq` instance for the type `Option<readonly [string, number]>`:
+**예시**: `Option<readonly [string, number]>` 타입에 대한 `Eq` 인스턴스
 
 ```ts
 import { tuple } from 'fp-ts/Eq'
@@ -2521,7 +2519,7 @@ console.log(EqOptionMyTuple.equals(o1, o2)) // => false
 console.log(EqOptionMyTuple.equals(o1, o3)) // => false
 ```
 
-If we slightly modify the imports in the following snippet we can obtain a similar result for `Ord`:
+다음 스니펫에서 import구문을 약간 수정하면 `Ord`에 대한 유사한 결과를 얻을 수 있습니다.
 
 ```ts
 import * as N from 'fp-ts/number'
