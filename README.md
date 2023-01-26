@@ -2772,29 +2772,29 @@ readFile('./myfile', (e) =>
 )
 ```
 
-# Category theory
+# 범주론
 
-We have seen how a founding pillar of functional programming is **composition**.
+우리는 함수형 프로그래밍의 기본 기둥이 어떻게 **합성**인지 살펴보았습니다.
 
-> And how do we solve problems? We decompose bigger problems into smaller problems. If the smaller problems are still too big, we decompose them further, and so on. Finally, we write code that solves all the small problems. And then comes the essence of programming: we compose those pieces of code to create solutions to larger problems. Decomposition wouldn't make sense if we weren't able to put the pieces back together. - Bartosz Milewski
+> 문제를 어떻게 해결하나요? 우리는 더 큰 문제를 더 작은 문제로 분할합니다. 더 작은 문제가 여전히 너무 크면 문제를 더 분할하는 식입니다. 마지막으로 모든 작은 문제를 해결하는 코드를 작성합니다. 그런 다음 프로그래밍의 본질이 나옵니다. 우리는 더 큰 문제에 대한 해결책을 만들기 위해 이런 코드 조각을 구성합니다. 조각을 다시 합칠 수 없다면 분할이 의미가 없을 것입니다. - 바르토시 밀레프스키
 
-But what does it means exactly? How can we state whether two things _compose_? And how can we say if two things compose _well_?
+그러나 정확히 무엇을 의미하나요? 두 가지가 *합성*인지 어떻게 알 수 있습니까? 그리고 두 가지가 _잘_ 합성되어 있다는 것을 어떻게 알 수 있나요?
 
-> Entities are composable if we can easily and generally combine their behaviours in some way without having to modify the entities being combined. I think of composability as being the key ingredient necessary for achieving reuse, and for achieving a combinatorial expansion of what is succinctly expressible in a programming model. - Paul Chiusano
+> 결합되는 엔티티를 수정할 필요 없이 어떤 방식으로든 쉽고 일반적으로 엔티티의 동작을 결합할 수 있는 경우 엔티티는 합성 가능합니다. 저는 합성 가능성이 재사용을 달성하고 프로그래밍 모델에서 간결하게 표현할 수 있는 것의 합성을 확장하는데 필요한 핵심이라고 생각합니다. - 폴 치우사노
 
-We've briefly mentioned how a program written in functional styles tends to resemble a pipeline:
+함수형 스타일로 작성된 프로그램이 파이프라인과 유사한 경향이 있다는 점을 간략하게 언급했었습니다.
 
 ```ts
 const program = pipe(
   input,
-  f1, // pure function
-  f2, // pure function
-  f3, // pure function
+  f1, // 순수 함수
+  f2, // 순수 함수
+  f3, // 순수 함수
   ...
 )
 ```
 
-But how simple it is to code in such a style? Let's try:
+그런 스타일로 코드를 작성하는 것이 얼마나 간단한가요? 한번 해보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -2803,36 +2803,34 @@ import * as RA from 'fp-ts/ReadonlyArray'
 const double = (n: number): number => n * 2
 
 /**
- * Given a ReadonlyArray<number> the program doubles the first element and returns it
+ * ReadonlyArray<number>가 주어지면 프로그램은 첫 번째 요소를 두 배로 만들고 반환합니다.
  */
 const program = (input: ReadonlyArray<number>): number =>
   pipe(
     input,
-    RA.head, // compilation error! Type 'Option<number>' is not assignable to type 'number'
+    RA.head, // 컴파일 오류! 'Option<number>' 타입은 'number' 타입에 할당할 수 없습니다.
     double
   )
 ```
 
-Why do I get a compilation error? Because `head` and `double` do not compose.
+컴파일 오류가 발생하는 이유는 무엇일까요? `head`와 `double`은 합성 불가능하기 때문입니다.
 
 ```ts
 head: (as: ReadonlyArray<number>) => Option<number>
 double: (n: number) => number
 ```
 
-`head`'s codomain is not included in `double`'s domain.
+`head`의 공역은 `double`의 정의역에 포함되지 않습니다.
 
-Looks like our goal to program using pure functions is over..Or is it?
+순수한 함수를 사용하여 프로그래밍하려는 우리의 목표는 끝난 것 같습니다..그런가요?
 
-We need to be able to refer to some **rigorous theory**, one able to answer such fundamental questions.
+우리는 이런 근본적인 질문에 답할 수 있는 **엄격한 이론**을 참조할 수 있어야 합니다.
 
-We need to refer to a **formal definition** of composability.
+합성 가능성의 **공식적인 정의**를 참조해야 합니다.
 
-Luckily, for the last 70 years ago, a large number of researchers, members of the oldest and largest humanity's open source project (mathematics) occupied itself with developing a theory dedicated to composability: **category theory**, a branch of mathematics founded by Saunders Mac Lane along Samuel Eilenberg (1945).
+운 좋게도 지난 70년 동안 인류의 가장 오래되고 가장 큰 오픈 소스 프로젝트(수학)의 구성원인 많은 연구자들이 합성 가능성에 전념하는 이론을인 **범주론**을 개발하는 데 몰두했습니다. (Saunders Mac Lane과 Samuel Eilenberg이 1945년에 설립한 수학 분야)
 
-> Categories capture the essence of composition.
-
-Saunders Mac Lane
+> 카테고리는 합성의 본질을 포착합니다.
 
 <center>
 <img src="images/maclane.jpg" width="300" alt="Saunders Mac Lane" />
@@ -2845,10 +2843,10 @@ Saunders Mac Lane
 
 </center>
 
-We'll see in the following chapters how a category can form the basis for:
+다음 장에서 범주가 다음의 기반을 형성하는 방법을 살펴보겠습니다.
 
-- a model for a generic **programming language**
-- a model for the concept of **composition**
+- 제네릭 **프로그래밍 언어**에 대한 모델
+- **합성** 개념의 모델
 
 ## Definition
 
