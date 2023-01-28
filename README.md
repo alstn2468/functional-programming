@@ -2853,7 +2853,7 @@ double: (n: number) => number
 범주의 정의는 실제로 복잡하지는 않지만 약간 길기 때문에 두 부분으로 나누겠습니다.
 
 - 첫 번째는 단지 기술적인 것입니다. (합성요소를 정의해야 합니다)
-- 두 번째는 우리가 신경 쓰는 것과 더 관련이 있는 구성의 개념입니다.
+- 두 번째는 우리가 신경 쓰는 것과 더 관련이 있는 합성의 개념입니다.
 
 ### Part I (합성요소)
 
@@ -2872,27 +2872,27 @@ double: (n: number) => number
 
 **참고**: 간단히 하기 위해 지금부터는 원을 건너뛰고 객체에만 레이블을 사용하겠습니다.
 
-### Part II (Composition)
+### Part II (합성)
 
-There is an operation, `∘`, called "composition", such as the following properties hold true:
+다음 속성이 참인 "합성"이라는 연산 `∘`가 있습니다.
 
-- (**composition of morphisms**) every time we have two morphisms `f: A ⟼ B` and `g: B ⟼ C` in `Morphisms` then there has to be a third morphism `g ∘ f: A ⟼ C` in `Morphisms` which is the _composition_ of `f` and `g`
+- (**사상의 합성**): 두 사상 `f: A ⟼ B`와 `g: B ⟼ C`가 있다면 `f`와 `g`의 *합성*인 세 번째 사상 `g ∘ f: A ⟼ C`가 있어야 합니다.
 
 <img src="images/composition.png" width="300" alt="composition" />
 
-- (**associativity**) if `f: A ⟼ B`, `g: B ⟼ C` and `h: C ⟼ D` then `h ∘ (g ∘ f) = (h ∘ g) ∘ f`
+- (**결합법칙**): `f: A ⟼ B`이고 `g: B ⟼ C`이며 `h: C ⟼ D`라면 `h ∘ (g ∘ f) = (h ∘ g) ∘ f`를 만족합니다.
 
 <img src="images/associativity.png" width="500" alt="associativity" />
 
-- (**identity**) for every object `X`, there is a morphism `identity: X ⟼ X` called _identity morphism_ of `X`, such as for every morphism `f: A ⟼ X` and `g: X ⟼ B`, the following equation holds true `identity ∘ f = f` and `g ∘ identity = g`.
+- (**항등**): 모든 객체 `X`에 대해, 모든 사상 `f: A ⟼ X`, `g: X ⟼ B`와 같이 `X`의 *항등 사상*이라고 하는 사상 `identity: X ⟼ X`가 있습니다. `identity ∘ f = f` 및 `g ∘ identity = g`가 참인 방정식을 갖습니다.
 
 <img src="images/identity.png" width="300" alt="identity" />
 
-**Example**
+**예시**
 
 <img src="images/category.png" width="300" alt="a simple category" />
 
-This category is very simple, there are three objects and six morphisms (1<sub>A</sub>, 1<sub>B</sub>, 1<sub>C</sub> are the identity morphisms for `A`, `B`, `C`).
+이 범주는 매우 간단합니다. 3개의 객체와 6개의 사상이 있습니다. (1<sub>A</sub>, 1<sub>B</sub>, 1<sub>C</sub>는 `A`, `B`, `C`에 대한 항등 사상입니다)
 
 ## Modeling programming languages with categories
 
