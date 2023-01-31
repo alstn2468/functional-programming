@@ -2894,21 +2894,19 @@ double: (n: number) => number
 
 이 범주는 매우 간단합니다. 3개의 객체와 6개의 사상이 있습니다. (1<sub>A</sub>, 1<sub>B</sub>, 1<sub>C</sub>는 `A`, `B`, `C`에 대한 항등 사상입니다)
 
-## Modeling programming languages with categories
+## 범주를 사용해 프로그래밍 언어 모델링하기
 
-A category can be seen as a simplified model for a **typed programming language**, where:
+범주는 다음과 같은 **타입 프로그래밍 언어**의 단순화된 모델로 볼 수 있습니다.
 
-- objects are **types**
-- morphisms are **functions**
-- `∘` is the usual **function composition**
+- 객체는 **타입**입니다.
+- 사상은 **함수**입니다.
+- `∘`는 보통의 **함수 합성**입니다.
 
-The following diagram:
+다음 다이어그램은 3가지 타입과 6가지 함수를 가진 가상의 단순한 프로그래밍 언어로 볼 수 있습니다.
 
-<img src="images/category.png" width="300" alt="a simple programming language" />
+<img src="images/category.png" width="300" alt="간단한 프로그래밍 언어" />
 
-can be seen as an imaginary (and simple) programming language with just three types and six functions
-
-Example given:
+다음과 같은 예시를 들어보면
 
 - `A = string`
 - `B = number`
@@ -2917,7 +2915,7 @@ Example given:
 - `g = number => boolean`
 - `g ∘ f = string => boolean`
 
-The implementation could be something like:
+구현은 다음과 같을 수 있습니다.
 
 ```ts
 const idA = (s: string): string => s
