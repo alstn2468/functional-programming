@@ -2932,16 +2932,16 @@ const g = (n: number): boolean => n > 2
 const gf = (s: string): boolean => g(f(s))
 ```
 
-## A category for TypeScript
+## TypeScript의 범주
 
-We can define a category, let's call it _TS_, as a simplified model of the TypeScript language, where:
+TypeScript 언어의 단순화된 모델로 범주를 정의하고 이를 *TS*라고 부르겠습니다.
 
-- **objects** are all the possible TypeScript types: `string`, `number`, `ReadonlyArray<string>`, etc...
-- **morphisms** are all TypeScript functions: `(a: A) => B`, `(b: B) => C`, ... where `A`, `B`, `C`, ... are TypeScript types
-- the **identity morphisms** are all encoded in a single polymorphic function `const identity = <A>(a: A): A => a`
-- **morphism's composition** is the usual function composition (which we know to be associative)
+- **객체**는 가능한 모든 TypeScript 타입입니다. (`string`, `number`, `ReadonlyArray<string>` 등...)
+- **사상**은 모두 TypeScript 함수입니다. (`(a: A) => B`, `(b: B) => C`, ... 여기서 `A`, `B`, `C`는 TypeScript 타입입니다.)
+- **항등 사상**은 모두 단일 다형성 함수 `const identity = <A>(a: A): A => a`로 인코딩됩니다.
+- **사상의 합성**은 일반적인 함수 합성입니다. (우리는 결합이라고 알고 있습니다.)
 
-As a model of TypeScript, the _TS_ category may seem a bit limited: no loops, no `if`s, there's _almost_ nothing... that being said that simplified model is rich enough to help us reach our goal: to reason about a well-defined notion of composition.
+TypeScript의 모델로서 _TS_ 범주는 약간 제한되어 보일 수 있습니다. 반복문도, `if`도 없고 _거의_ 아무것도 없습니다. 단순화된 모델은 우리의 목표인 합성에 대한 잘 정의된 개념을 달성하는 데 도움이 되기에 충분합니다.
 
 ## Composition's core problem
 
