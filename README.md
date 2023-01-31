@@ -2943,9 +2943,9 @@ TypeScript 언어의 단순화된 모델로 범주를 정의하고 이를 *TS*�
 
 TypeScript의 모델로서 _TS_ 범주는 약간 제한되어 보일 수 있습니다. 반복문도, `if`도 없고 _거의_ 아무것도 없습니다. 단순화된 모델은 우리의 목표인 합성에 대한 잘 정의된 개념을 달성하는 데 도움이 되기에 충분합니다.
 
-## Composition's core problem
+## 합성의 핵심 문제
 
-In the _TS_ category we can compose two generic functions `f: (a: A) => B` and `g: (c: C) => D` as long as `C = B`
+_TS_ 범주에서 `C = B`인 `f: (a: A) => B`와 `g: (c: C) => D`인 두 가지 일반 함수를 합성할 수 있습니다.
 
 ```ts
 function flow<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C {
@@ -2957,20 +2957,20 @@ function pipe<A, B, C>(a: A, f: (a: A) => B, g: (b: B) => C): C {
 }
 ```
 
-But what happens if `B != C`? How can we compose two such functions? Should we give up?
+하지만 `B != C`라면 어떻게 할 수 있을까요? 이런 두 가지 함수를 어떻게 합성할 수 있을까요? 포기해야 할까요?
 
-In the next section we'll see under which conditions such a composition is possible.
+다음 섹션에서는 이러한 합성이 가능한 조건을 살펴보겠습니다.
 
-**Spoiler**
+**스포일러**
 
-- to compose `f: (a: A) => B` with `g: (b: B) => C` we use our usual function composition
-- to compose `f: (a: A) => F<B>` with `g: (b: B) => C` we need a **functor** instance for `F`
-- to compose `f: (a: A) => F<B>` with `g: (b: B, c: C) => D` we need an **applicative functor** instance for `F`
-- to compose `f: (a: A) => F<B>` with `g: (b: B) => F<C>` we need a **monad** instance for `F`
+- `f: (a: A) => B`와 `g: (b: B) => C`를 합성하기 위해서는 일반적인 함수 합성을 사용합니다.
+- `f: (a: A) => F<B>`와 `g: (b: B) => C`를 합성하려면 `F`에 대한 **펑터** 인스턴스가 필요합니다.
+- `f: (a: A) => F<B>`와 `g: (b: B, c: C) => D`를 합성하려면 `F`에 대한 **어플리케이티브 펑터** 인스턴스가 필요합니다.
+- `f: (a: A) => F<B>`와 `g: (b: B) => F<C>`를 합성하려면 `F`에 대한 **모나드** 인스턴스가 필요합니다.
 
-<img src="images/spoiler.png" width="900" alt="The four composition recipes" />
+<img src="images/spoiler.png" width="900" alt="네 가지 합성 레시피" />
 
-The problem we started with at the beginning of this chapter corresponds to the second situation, where `F` is the `Option` type:
+이 장의 시작 부분에서 시작한 문제는 `F`가 `Option` 타입인 두 번째 상황에 해당합니다.
 
 ```ts
 // A = ReadonlyArray<number>, B = number, F = Option
@@ -2978,7 +2978,7 @@ head: (as: ReadonlyArray<number>) => Option<number>
 double: (n: number) => number
 ```
 
-To solve it, the next chapter will talk about functors.
+이것을 해결하기 위해 다음 장에서는 펑터에 대해 설명합니다.
 
 # Functors
 
