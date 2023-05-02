@@ -18,11 +18,11 @@ npm i
 
 인터넷에서 검색하면 다음 정의를 찾을 수 있습니다.
 
-> (순수) 함수는 같은 입력이 주어지면 부작용 없이 항상 같은 출력을 반환하는 프로시저입니다.
+> (순수) 함수는 같은 입력이 주어지면 사이드 이펙트 없이 항상 같은 출력을 반환하는 프로시저입니다.
 
-"부작용"이라는 단어는 아직 구체적인 의미가 없습니다(앞으로 공식적인 정의를 제공하는 방법을 살펴보겠습니다). 중요한 것은 일종의 직관을 갖고 파일을 열거나 데이터베이스에 쓰는 것에 대해 생각하는 것입니다.
+"사이드 이펙트"라는 단어는 아직 구체적인 의미가 없습니다(앞으로 공식적인 정의를 제공하는 방법을 살펴보겠습니다). 중요한 것은 일종의 직관을 갖고 파일을 열거나 데이터베이스에 쓰는 것에 대해 생각하는 것입니다.
 
-당분간 우리는 부작용이 값을 반환하는 것 외에 함수가 하는 *모든 것*이라고 스스로 제한할 수 있습니다.
+당분간 우리는 사이드 이펙트가 값을 반환하는 것 외에 함수가 하는 *모든 것*이라고 스스로 제한할 수 있습니다.
 
 순수 함수만 사용하는 프로그램의 구조는 무엇일까요?
 
@@ -53,7 +53,7 @@ const program = pipe(
 > 함수형 프로그래밍은 사람들에게 프로그램 구성 뒤에 있는 수학을 가르치는 데 도움이 될 것입니다.
 >
 > - 합성 가능한 코드를 작성하는 방법
-> - 부작용에 대해 추론하는 방법
+> - 사이드 이펙트에 대해 추론하는 방법
 > - 일관되고 일반적이며 덜 임시적인 API를 작성하는 방법
 
 코드의 속성에 중점을 둔다는 것은 무엇을 의미할까요? 예시를 들어 보겠습니다.
@@ -1641,11 +1641,11 @@ const Monoid: Monoid<Point> = tuple(N.MonoidSum, N.MonoidSum)
 
 첫 번째 장에서 순수 함수의 비공식적 정의를 보았습니다.
 
-> 순수 함수는 같은 입력이 주어지면 부작용 없이 항상 같은 출력을 반환하는 관찰 가능한 프로시저입니다.
+> 순수 함수는 같은 입력이 주어지면 사이드 이펙트 없이 항상 같은 출력을 반환하는 관찰 가능한 프로시저입니다.
 
 이런 비공식적 설명은 다음과 같은 의심의 여지를 남길 수 있습니다.
 
-- "부작용"이란 무엇일까요?
+- "사이드 이펙트"란 무엇일까요?
 - "관찰 가능한"이란 무엇을 의미할까요?
 - "같은"이란 무엇을 의미할까요?
 
@@ -1682,7 +1682,7 @@ const f: Record<number, number> = {
 <!--
 TODO:
 함수를 정의할 때 집합 `f`는 *정적으로* 설명되어야 합니다. (해당 집합의 요소는 시간에 따라 아무 이유 없이 변경될 수 없음을 의미합니다)
-이러한 방식으로 모든 형태의 부작용을 배제할 수 있으며 반환 값은 항상 동일합니다.
+이러한 방식으로 모든 형태의 사이드 이펙트를 배제할 수 있으며 반환 값은 항상 동일합니다.
 -->
 
 예제에 있는 것은 함수의 _확장_ 정의라고 합니다. 즉, 정의역의 각 요소를 하나씩 열거하고 각 요소에 대해 해당 공역 요소를 가리킵니다.
@@ -1776,9 +1776,9 @@ declare const concatAll: <A>(M: Monoid<A>) => (as: ReadonlyArray<A>) => A
 
 함수 구현 방법에 대한 기술적 세부 사항은 관련이 없으므로 구현 측면에서 최대한의 자유가 있습니다.
 
-따라서 단순히 참조 투명성을 부정함으로써 "부작용"을 정의할 수 있을까요?
+따라서 단순히 참조 투명성을 부정함으로써 "사이드 이펙트"를 정의할 수 있을까요?
 
-> 참조 투명성의 이점을 얻지 못하는 경우 식에 "부작용"이 포함됩니다.
+> 참조 투명성의 이점을 얻지 못하는 경우 식에 "사이드 이펙트"가 포함됩니다.
 
 함수는 함수형 프로그래밍의 두 기둥 중 하나인 참조 투명성의 완벽한 예시일 뿐만 아니라 두 번째 기둥인 **합성**의 예시이기도 합니다.
 
@@ -2310,7 +2310,7 @@ f': X ⟶ Option(Y)
 
 ### `Option` 타입
 
-`Option` 타입은 실패(`None`의 경우) 또는 `A` 타입(`Some<A>`의 경우)을 반환할 수 있는 계산의 효과를 표현합니다.
+`Option` 타입은 실패(`None`의 경우) 또는 `A` 타입(`Some<A>`의 경우)을 반환할 수 있는 계산의 이펙트를 표현합니다.
 
 ```ts
 // 실패를 표현합니다.
@@ -2980,43 +2980,43 @@ double: (n: number) => number
 
 이것을 해결하기 위해 다음 장에서는 펑터에 대해 설명합니다.
 
-# Functors
+# 펑터
 
-In the last section we've spoken about the _TS_ category (the TypeScript category) and about function composition's core problem:
+마지막 섹션에서 우리는 _TS_ 범주 (TypeScript 범주)와 함수 합성의 핵심 문제에 대해 이야기 했습니다.
 
-> How can we compose two generic functions `f: (a: A) => B` and `g: (c: C) => D`?
+> 두 일반 함수 `f: (a: A) => B`와 `g: (c: C) => D`를 어떻게 합성할 수 있을까요?
 
-Why is finding solutions to this problem so important?
+이 문제에 대한 해결책을 찾는 것이 왜 중요할까요?
 
-Because, if it is true that categories can be used to model programming languages, morphisms (functions in the _TS_ category) can be used to model **programs**.
+프로그래밍 언어를 모델링하는 데 범주를 사용할 수 있다면 **프로그램**을 모델링 하는데 사상(_TS_ 범주의 함수)을 사용할 수 있기 때문입니다.
 
-Thus, solving this abstract problem means finding a concrete way of **composing programs in a generic way**. And _that_ is really interesting for us developers, isn't it?
+따라서 이 추상적인 문제를 해결한다는 것은 **일반적인 방식으로 프로그램을 구성**하는 구체적인 방법을 찾는 것을 의미합니다. 그리고 이것은 우리 개발자들에게 정말 흥미로운 일입니다. 그렇지 않나요?
 
-## Functions as programs
+## 프로그램으로서의 함수
 
-If we want to model programs with functions we need to tackle an issue immediately:
+함수로 프로그램을 모델링하려면 즉시 문제를 해결해야 합니다.
 
-> How is it possible to model a program that produces side effects with a pure function?
+> 순수한 함수로 사이드 이펙트를 일으키는 프로그램을 어떻게 모델링할 수 있을까요?
 
-The answer is to model side effects through **effects**, meaning types that **represent** side effects.
+정답은 사이드 이펙트를 **표현하는** 타입을 의미하는 **이펙트**를 통해 사이드 이펙트를 모델링하는 것입니다.
 
-Let's see two possible techniques to do so in JavaScript:
+JavaScript에서 그렇게 할 수 있는 두 가지 가능한 기술을 살펴보겠습니다.
 
-- define a DSL (domain specific language) for effects
-- use a _thunk_
+- 이펙트에 대한 DSL(도메인 특정 언어) 정의
+- _thunk_ 사용
 
-The first technique, using a DSL, means modifying a program like:
+DSL을 사용하는 첫 번째 기술은 다음과 같이 프로그램을 수정하는 것을 의미합니다.
 
 ```ts
 function log(message: string): void {
-  console.log(message) // side effect
+  console.log(message) // 사이드 이펙트
 }
 ```
 
-changing its codomain to make the function return a **description** of the side effect:
+함수가 사이드 이펙트에 대한 **설명**을 반환하도록 공역을 변경합니다.
 
 ```ts
-type DSL = ... // sum type of every possible effect handled by the system
+type DSL = ... // 시스템에서 처리할 수 있는 모든 이펙트의 합타입
 
 function log(message: string): DSL {
   return {
@@ -3026,76 +3026,71 @@ function log(message: string): DSL {
 }
 ```
 
-**Quiz**. Is the freshly defined `log` function really pure? Actually `log('foo') !== log('foo')`!
+**퀴즈**: 새로 정의된 `log` 함수가 정말 순수한가요? 사실 `log('foo') !== log('foo')`입니다!
 
-This technique requires a way to combine effects and the definition of an interpreter able to execute the side effects when launching the final program.
+이 기술은 이펙트를 결합하는 방법과 최종 프로그램을 실행할 때 사이드 이펙트를 실행할 수 있는 인터프리터의 정의가 필요합니다.
 
-The second technique, way simpler in TypeScript, is to enclose the computation in a _thunk_:
+두 번째 기술은 TypeScript에서 훨씬 간단하며 계산을 *thunk*로 묶는 것입니다.
 
 ```ts
-// a thunk representing a synchronous side effect
+// 동기 사이드 이펙트를 표현하는 thunk
 type IO<A> = () => A
 
 const log = (message: string): IO<void> => {
-  return () => console.log(message) // returns a thunk
+  return () => console.log(message) // thunk를 반환
 }
 ```
 
-The `log` program, once executed, won't cause immediately a side effect, but returns **a value representing the computation** (also known as _action_).
+`log` 프로그램은 일단 실행되면 즉시 사이드 이펙트를 일으키지 않지만 **계산을 나타내는 값**(*액션*이라고도 함)을 반환합니다.
 
 ```ts
 import { IO } from 'fp-ts/IO'
 
 export const log = (message: string): IO<void> => {
-  return () => console.log(message) // returns a thunk
+  return () => console.log(message) // thunk를 반환
 }
 
 export const main = log('hello!')
-// there's nothing in the output at this point
-// because `main` is only an inert value
-// representing the computation
+// `main`은 계산을 나타내는 비활성 값일 뿐이기 때문에
+// 이 시점에서는 아무 것도 출력되지 않습니다.
 
 main()
-// only when launching the program I will see the result
+// 프로그램을 시작할 때만 결과를 볼 수 있습니다.
 ```
 
-In functional programming there's a tendency to shove side effects (under the form of effects) to the border of the system (the `main` function) where they are executed by an interpreter obtaining the following schema:
+함수형 프로그래밍에서는 다음 스키마를 얻는 인터프리터에 의해 실행되는 시스템의 경계(`main` 함수)에 사이드 이펙트를 밀어넣는 경향이 있습니다.
 
-> system = pure core + imperative shell
+> 시스템 = 순수한 코어 + 명령형 쉘
 
-In _purely functional_ languages (like Haskell, PureScript or Elm) this division is strict and clear and imposed by the very languages.
+_순수한 함수형_ 언어(예: Haskell, PureScript 또는 Elm)에서 이 구분은 엄격하고 명확하며 언어에 의해 부과됩니다.
 
-Even with this thunk technique (the same technique used in `fp-ts`) we need a way to combine effects, which brings us back to our goal of composing programs in a generic way, let's see how.
+이 thunk 기술(`fp-ts`에서 사용되는 것과 동일한 기술)을 사용하더라도 이펙트를 결합하는 방법이 필요합니다. 이를 통해 일반적인 방식으로 프로그램을 합성한다는 목표로 되돌아가 방법을 살펴보겠습니다.
 
-We first need a bit of (informal) terminology: we'll call **pure program** a function with the following signature:
+먼저 약간의 (비공식적인) 용어가 필요합니다. **순수한 프로그램**을 다음 시그니처가 있는 함수라고 가정해 보겠습니다.
 
 ```ts
 (a: A) => B
 ```
 
-Such a signature models a program that takes an input of type `A` and returns a result of type `B` without any effect.
+이러한 시그니처는 `A` 타입의 입력을 받아 아무런 이펙트 없이 타입 `B`의 결과를 반환하는 프로그램을 모델링합니다.
 
-**Example**
-
-The `len` program:
+**예시**: `len` 프로그램
 
 ```ts
 const len = (s: string): number => s.length
 ```
 
-We'll call an **effectful program** a function with the following signature:
+우리는 **이펙트가 있는 프로그램**을 다음 시그니처를 갖는 함수라고 부를 것입니다.
 
 ```ts
 (a: A) => F<B>
 ```
 
-Such a signature models a program that takes an input of type `A` and returns a result of type `B` together with an **effect** `F`, where `F` is some sort of type constructor.
+이러한 시그니처는 `A` 타입의 입력을 받아 **이펙트** `F`와 함께 `B` 타입의 결과를 반환하는 프로그램을 모델링합니다. 여기서 `F`는 일종의 타입 생성자입니다.
 
-Let's recall that a [type constructor](https://en.wikipedia.org/wiki/Type_constructor) is an `n`-ary type operator that takes as argument one or more types and returns another type. We have seen examples of such constructors as `Option`, `ReadonlyArray`, `Either`.
+[타입 생성자](https://en.wikipedia.org/wiki/Type_constructor)는 하나 이상의 타입을 인자를 받고 다른 타입을 반환하는 `n`항 타입 연산자라는 점을 상기해 보겠습니다. 우리는 `Option`, `ReadonlyArray`, `Either`와 같은 생성자의 예시를 보았습니다.
 
-**Example**
-
-The `head` program:
+**예시**: `head` 프로그램
 
 ```ts
 import { Option, some, none } from 'fp-ts/Option'
@@ -3104,39 +3099,37 @@ const head = <A>(as: ReadonlyArray<A>): Option<A> =>
   as.length === 0 ? none : some(as[0])
 ```
 
-is a program with an `Option` effect.
+`Option` 이펙트가 있는 프로그램입니다.
 
-When we talk about effects we are interested in `n`-ary type constructors where `n >= 1`, example given:
+이펙트에 대해 이야기할 때 `n >= 1`인 `n`항 타입 생성자에 관심이 있습니다. 예시는 다음과 같습니다.
 
-| Type constructor   | Effect (interpretation)                        |
-| ------------------ | ---------------------------------------------- |
-| `ReadonlyArray<A>` | a non deterministic computation                |
-| `Option<A>`        | a computation that may fail                    |
-| `Either<E, A>`     | a computation that may fail                    |
-| `IO<A>`            | a synchronous computation that **never fails** |
-| `Task<A>`          | an asynchronous computation **never fails**    |
-| `Reader<R, A>`     | reading from an environment                    |
-
-where
+| 타입 생성자        | 이펙트 (해석)                      |
+| ------------------ | ---------------------------------- |
+| `ReadonlyArray<A>` | 비결정적 계산                      |
+| `Option<A>`        | 실패할 수 있는 계산                |
+| `Either<E, A>`     | 실패할 수 있는 계산                |
+| `IO<A>`            | **절대 실패**하지 않는 동기 계산   |
+| `Task<A>`          | **절대 실패**하지 않는 비동기 계산 |
+| `Reader<R, A>`     | 환경을 읽을 때                     |
 
 ```ts
-// a thunk returning a `Promise`
+// `Promise`를 반환하는 thunk
 type Task<A> = () => Promise<A>
 ```
 
 ```ts
-// `R` represents an "environment" needed for the computation
-// (we can "read" from it) and `A` is the result
+// `R`은 계산에 필요한 "환경"을 나타냅니다.
+// (우리는 환경에서 "읽을" 수 있습니다) 그리고 `A`는 결과입니다.
 type Reader<R, A> = (r: R) => A
 ```
 
-Let's get back to our core problem:
+핵심 문제로 돌아가 보겠습니다.
 
-> How do we compose two generic functions `f: (a: A) => B` e `g: (c: C) => D`?
+> 두 일반 함수 `f: (a: A) => B`와 `g: (c: C) => D`를 어떻게 합성할 수 있을까요?
 
-With our current set of rules this general problem is not solvable. We need to add some _boundaries_ to `B` and `C`.
+현재 규칙으로는 이 일반적인 문제를 해결할 수 없습니다. `B`와 `C`에 일부 *경계*를 추가해야 합니다.
 
-We already know that if `B = C` then the solution is the usual function composition.
+우리는 이미 `B = C`인 경우 해결책이 일반적인 함수 합성이라는 것을 알고 있습니다.
 
 ```ts
 function flow<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C {
@@ -3144,9 +3137,9 @@ function flow<A, B, C>(f: (a: A) => B, g: (b: B) => C): (a: A) => C {
 }
 ```
 
-But what about other cases?
+그러나 다른 경우는 어떻게 할 수 있을까요?
 
-## A boundary that leads to functors
+## 펑터로 이어지는 경계
 
 Let's consider the following boundary: `B = F<C>` for some type constructor `F`, we have the following situation:
 
