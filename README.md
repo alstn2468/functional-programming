@@ -3403,13 +3403,13 @@ console.log(pipe([1, 2, 3], map(flow(double, increment)))) // => [ 3, 5, 7 ]
 
 ## 펑터와 함수형 오류 처리
 
-Functors have a positive impact on functional error handling, let's see a practical example:
+펑터는는 함수형 오류 처리에 긍정적인 영향을 줍니다. 실제 예시를 살펴보겠습니다.
 
 ```ts
 declare const doSomethingWithIndex: (index: number) => string
 
 export const program = (ns: ReadonlyArray<number>): string => {
-  // -1 indicates that no element has been found
+  // -1은 요소가 발견되지 않았음을 표현합니다.
   const i = ns.findIndex((n) => n > 0)
   if (i !== -1) {
     return doSomethingWithIndex(i)
@@ -3418,9 +3418,9 @@ export const program = (ns: ReadonlyArray<number>): string => {
 }
 ```
 
-Using the native `findIndex` API we are forced to use an `if` branch to test whether we have a result different than `-1`. If we forget to do so, the value `-1` could be unintentionally passed as input to `doSomethingWithIndex`.
+내장된 `findIndex` API를 사용해 `-1`과 다른 결과가 있는지 테스트하기 위해서는 `if` 분기를 사용해야 합니다. 잊어버리면 `-1` 값이 의도치 않게 `doSomethingWithIndex`에 입력으로 전달될 수 있습니다.
 
-Let's see how easier it is to obtain the same behavior using `Option` and its functor instance:
+`Option`과 해당 펑터 인스턴스를 사용하여 동일한 동작을 얻는 것이 얼마나 쉬운지 살펴보겠습니다.
 
 ```ts
 import { pipe } from 'fp-ts/function'
@@ -3437,15 +3437,15 @@ export const program = (ns: ReadonlyArray<number>): Option<string> =>
   )
 ```
 
-Practically, using `Option`, we're always in front of the `happy path`, error handing happens behind the scenes thanks to `map`.
+실질적으로 `Option`을 사용하면 항상 `happy path` 앞에 있고 `map` 덕분에 오류 처리를 뒤에서 할 수 있습니다.
 
-**데모** (optional)
+**데모** (선택)
 
 [`04_functor.ts`](src/04_functor.ts)
 
-**Quiz**. `Task<A>` represents an asynchronous call that always succeed, how can we model a computation that can fail instead?
+**퀴즈**: `Task<A>`는 항상 성공하는 비동기 호출을 나타냅니다. 실패할 수 있는 계산을 어떻게 모델링할 수 있습니까?
 
-## Functors compose
+## 펑터 합성
 
 Functors compose, meaning that given two functors `F` and `G` then the composition `F<G<A>>` is still a functor and the `map` of this composition is the composition of the `map`s.
 
