@@ -1,11 +1,11 @@
-// Adapted from https://adrian-salajan.github.io/blog/2021/01/25/images-functor
-// run `npm run functor` to execute
+// https://adrian-salajan.github.io/blog/2021/01/25/images-functor 에서 수정됨
+// `npm run functor` 명령어로 실행
 
 import { Endomorphism } from 'fp-ts/function'
 import * as R from 'fp-ts/Reader'
 
 // -------------------------------------------------------------------------------------
-// model
+// 모델
 // -------------------------------------------------------------------------------------
 
 type Color = {
@@ -22,7 +22,7 @@ type Point = {
 type Image<A> = R.Reader<Point, A>
 
 // -------------------------------------------------------------------------------------
-// constructors
+// 생성자
 // -------------------------------------------------------------------------------------
 
 const color = (red: number, green: number, blue: number): Color => ({
@@ -36,7 +36,7 @@ const BLACK: Color = color(0, 0, 0)
 const WHITE: Color = color(255, 255, 255)
 
 // -------------------------------------------------------------------------------------
-// combinators
+// 결합자
 // -------------------------------------------------------------------------------------
 
 const brightness = (color: Color): number =>
@@ -50,15 +50,15 @@ export const grayscale = (c: Color): Color => {
 export const invert = (c: Color): Color =>
   color(255 - c.red, 255 - c.green, 255 - c.red)
 
-// if brightness over some value V then put White else put Black
+// 밝기가 어떤 값 V보다 크면 흰색을 넣고 그렇지 않으면 검은색을 넣습니다.
 export const threshold = (c: Color): Color =>
   brightness(c) < 100 ? BLACK : WHITE
 
 // -------------------------------------------------------------------------------------
-// main
+// 메인
 // -------------------------------------------------------------------------------------
 
-// `main` must be called by passing a transformation function, that is, an `Endomorphism<Image<RGB>>`
+// `main`은 변환 함수, 즉 `Endomorphism<Image<RGB>>`를 전달해 호출해야 합니다.
 main(R.map((c: Color) => c))
 // main(R.map(grayscale))
 // main(R.map(invert))
