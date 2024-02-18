@@ -3447,9 +3447,9 @@ export const program = (ns: ReadonlyArray<number>): Option<string> =>
 
 ## 펑터 합성
 
-Functors compose, meaning that given two functors `F` and `G` then the composition `F<G<A>>` is still a functor and the `map` of this composition is the composition of the `map`s.
+펑터 합성은 두 개의 펑터 `F`와 `G`가 주어졌을 때 합성된 `F<G<A>>`는 여전히 펑터이고, 이 합성의 `map`은 여전히 `map`임을 의미합니다.
 
-**Example** (`F = Task`, `G = Option`)
+**예시** (`F = Task`, `G = Option`)
 
 ```ts
 import { flow } from 'fp-ts/function'
@@ -3463,7 +3463,7 @@ export const map: <A, B>(
 ) => (fa: TaskOption<A>) => TaskOption<B> = flow(O.map, T.map)
 
 // -------------------
-// usage example
+// 사용 예시
 // -------------------
 
 interface User {
@@ -3471,7 +3471,7 @@ interface User {
   readonly name: string
 }
 
-// a dummy remote database
+// 더미 원격 데이터베이스
 const database: Record<number, User> = {
   1: { id: 1, name: 'Ruth R. Gonzalez' },
   2: { id: 2, name: 'Terry R. Emerson' },
@@ -3489,17 +3489,17 @@ getUserName(1)().then(console.log) // => some('Ruth R. Gonzalez')
 getUserName(4)().then(console.log) // => none
 ```
 
-## Contravariant Functors
+## 반공변 펑터
 
-In the previous section we haven't been completely thorough with our definitions. What we have seen in the previous section and called "functors" should be more properly called **covariant functors**.
+이전 섹션에서는 철저하게 정의를 다루지 않았습니다. 이전 섹션에서 우리가 "펑터"라고 불렀던 것들은 **공변 펑터**라고 부르는 것이 더 적절합니다.
 
-In this section we'll see another variant of the functor concept, **contravariant** functors.
+이 섹션에서는 펑터 개념의 다른 변형인  **반공변** 펑터를 살펴보겠습니다.
 
-The definition of a contravariant functor is pretty much the same of the covariant one, except for the signature of its fundamental operation, which is called `contramap` rather than `map`.
+반공변 펑터의 정의는 `map`이 아닌 `contramap`이라고 불리는 기본 연산의 시그니처를 제외하면 공변 펑터와 거의 같습니다.
 
 <img src="images/contramap.png" width="300" alt="contramap" />
 
-**Example**
+**예시**
 
 ```ts
 import { map } from 'fp-ts/Option'
@@ -3512,11 +3512,11 @@ type User = {
 
 const getId = (_: User): number => _.id
 
-// the way `map` operates...
+// `map`의 동작 방식
 // const getIdOption: (fa: Option<User>) => Option<number>
 const getIdOption = map(getId)
 
-// the way `contramap` operates...
+// `contramap`의 동작 방식
 // const getIdEq: (fa: Eq<number>) => Eq<User>
 const getIdEq = contramap(getId)
 
@@ -3526,7 +3526,7 @@ const EqID = getIdEq(N.Eq)
 
 /*
 
-In the `Eq` chapter we saw:
+`Eq` 장에서 우리는 아래 코드를 본 적이 있습니다.
 
 const EqID: Eq<User> = pipe(
   N.Eq,
@@ -3535,11 +3535,11 @@ const EqID: Eq<User> = pipe(
 */
 ```
 
-## Functors in `fp-ts`
+## `fp-ts`의 펑터
 
-How do we define a functor instance in `fp-ts`? Let's see some example.
+`fp-ts`에서 펑터 인스턴스를 어떻게 정의하고 있습니까? 몇 가지 예시를 살펴보겠습니다.
 
-The following interface represents the model of some result we get by calling some HTTP API:
+아래 인터페이스는 어떤 HTTP API를 호출해 얻은 결과의 모델을 나타냅니다.
 
 ```ts
 interface Response<A> {
@@ -3550,12 +3550,12 @@ interface Response<A> {
 }
 ```
 
-Please note that since `body` is parametric, this makes `Response` a good candidate to find a functor instance given that `Response` is a an `n`-ary type constructor with `n >= 1` (a necessary condition).
+`body`는 타입 파라미터를 이용하므로 `Response`가 `n >= 1`(필요조건)인 `n`-항 타입 생성자임을 고려하면 `Response`는 펑터 인스턴스를 찾기에 좋은 후보가 됩니다.
 
-To define a functor instance for `Response` we need to define a `map` function along some [technical details](https://gcanti.github.io/fp-ts/recipes/HKT.html) required by `fp-ts`.
+`Response`에 대한 펑터 인스턴스를 정의하기 위해서는 `fp-ts`에서 요구하는 일부 [기술적 세부 사항](https://gcanti.github.io/fp-ts/recipes/HKT.html)에 따라 `map` 함수를 정의해야 합니다.
 
 ```ts
-// `Response.ts` module
+// `Response.ts` 모듈
 
 import { pipe } from 'fp-ts/function'
 import { Functor1 } from 'fp-ts/Functor'
@@ -3580,7 +3580,7 @@ export const map = <A, B>(f: (a: A) => B) => (
   body: f(fa.body)
 })
 
-// functor instance for `Response<A>`
+// `Response<A>`에 대한 펑터 인스턴스
 export const Functor: Functor1<'Response'> = {
   URI: 'Response',
   map: (fa, f) => pipe(fa, map(f))
