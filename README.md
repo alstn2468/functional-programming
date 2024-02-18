@@ -3587,26 +3587,26 @@ export const Functor: Functor1<'Response'> = {
 }
 ```
 
-## Do functors solve the general problem?
+## 펑터가 일반적인 문제를 해결할 수 있나요?
 
-Not yet. Functors allow us to compose an effectful program `f` with a pure program `g`, but `g` has to be a **unary** function, accepting one single argument. What happens if `g` takes two or more arguments?
+아직은 아닙니다. 펑터를 사용하면 순수 프로그램 `g`와 사이드 이펙트가 있는 프로그램 `f`를 합성할 수 있지만 `g`는 단일 인자만 허용하는 **단항** 함수여야 합니다. `g`가 두 개 이상의 인자를 받으면 어떻게 되나요?
 
-| Program f | Program g               | Composition  |
-| --------- | ----------------------- | ------------ |
-| pure      | pure                    | `g ∘ f`      |
-| effectful | pure (unary)            | `map(g) ∘ f` |
-| effectful | pure (`n`-ary, `n > 1`) | ?            |
+| 프로그램 f       | 프로그램 g               | 합성         |
+| ---------------- | ------------------------ | ------------ |
+| 순수함           | 순수함                   | `g ∘ f`      |
+| 사이드 이펙트가 있음 | 순수함 (단항)            | `map(g) ∘ f` |
+| 사이드 이펙트가 있음 | 순수함 (`n`-항, `n > 1`) | ?            |
 
-To manage this circumstance we need something _more_, in the next chapter we'll see another important abstraction in functional programming: **applicative functors**.
+이 상황을 관리하기 위해서는 무언가 _더_ 필요합니다. 다음 장에서 함수형 프로그래밍의 또 다른 중요한 추상화인 **애플리케이티브 펑터**에 대해 알아보겠습니다.
 
 # Applicative functors
 
 In the section regarding functors we've seen that we can compose an effectful program `f: (a: A) => F<B>` with a pure one `g: (b: B) => C` through the transformation of `g` to a function `map(g): (fb: F<B>) => F<C>` (if and only if `F` admits a functor instance).
 
-| Program f | Program g    | Composition  |
-| --------- | ------------ | ------------ |
-| pure      | pure         | `g ∘ f`      |
-| effectful | pure (unary) | `map(g) ∘ f` |
+| 프로그램 f | 프로그램 g   | 합성         |
+| ---------- | ------------ | ------------ |
+| pure       | pure         | `g ∘ f`      |
+| effectful  | pure (unary) | `map(g) ∘ f` |
 
 But `g` has to be unary, it can only accept a single argument as input. What happens if `g` accepts two arguments? Can we still transform `g` using only the functor instance?
 
